@@ -15,8 +15,8 @@
     import LocationSelect from "$components/LocationSelect.svelte"
 
     $breadcrumbs = [
-        { label: "Create Location", href: "/location/create" },
-        { label: "Locations", href: "/location" }
+        { label: "Locations", href: "/location" },
+        { label: "Create Location", href: "/location/create" }
     ];
     $header = headerSnippet
 

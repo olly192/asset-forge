@@ -16,8 +16,8 @@
     import CategorySelect from "$components/CategorySelect.svelte"
 
     $breadcrumbs = [
-        { label: "Create Category", href: "/category/create" },
-        { label: "Categories", href: "/category" }
+        { label: "Categories", href: "/category" },
+        { label: "Create Category", href: "/category/create" }
     ];
     $header = headerSnippet
 
