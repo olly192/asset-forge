@@ -1,0 +1,38 @@
+services:
+  asset-forge:
+    container_name: asset-forge
+    image: olly192:asset-forge
+    ports:
+      - "3000:3000"
+    env_file:
+      - "docker.env"
+    depends_on:
+      - minio
+      - postgresql
+
+  # Minio Object Storage
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./data/minio:/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+
+  # PostgreSQL Database
+  postgresql:
+    container_name: postgresql
+    image: docker.io/library/postgres:17
+    environment:
+      - POSTGRES_USER=asset_forge
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=asset_forge
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data:Z
+    ports:
+      - "5432:5432"
