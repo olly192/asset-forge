@@ -17,8 +17,8 @@
 {#snippet Tree({ id, name, children, icon: Icon, color }: TreeElement)}
     {#if !children || children.length === 0}
         <div class="tree-item">
-            <div class="ml-1">
-                <Icon class="stroke-{color || 'neutral'}-500 size-4" />
+            <div>
+                <Icon class="stroke-{color || 'neutral'}-500 size-4 ml-2" />
                 {name}
             </div>
             <div>
@@ -39,7 +39,7 @@
                                 <Plus class="tree-expand size-4" />
                                 <Minus class="tree-collapse size-4" />
                             </Button>
-                            <Icon class="stroke-{color || 'neutral'}-500 size-4" />
+                            <Icon class="stroke-{color || 'neutral'}-500 size-4 ml-1" />
                             {name}
                         </div>
                         <div>
