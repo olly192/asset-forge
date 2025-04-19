@@ -3,9 +3,10 @@
     import { Circle } from "lucide-svelte";
     import { Badge } from "$lib/components/ui/badge";
     import { goto } from "$app/navigation";
+    import type { Writable } from "svelte/store"
 
-    const { value, options }: { value: string[], options: FilterOption[] } = $props();
-    const tags = options.filter((option) => value.includes(option.value));
+    const { value, options }: { value: string[], options: Writable<FilterOption[]> } = $props();
+    const tags = $derived($options.filter((option) => value.includes(option.value)));
     // TODO: Limit display to 2/3 tags
 </script>
 

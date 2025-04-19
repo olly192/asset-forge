@@ -4,12 +4,14 @@
         DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Archive, Ellipsis, Eye, Pen, Trash } from "lucide-svelte";
-    import { labels } from "$components/table/data";
+    import { Archive, Boxes, Ellipsis, Eye, Pen, Trash } from "lucide-svelte";
     import type { Asset } from "@prisma/client";
     import { goto } from "$app/navigation";
+    import type { Writable } from "svelte/store";
+    import type { Data } from "./columns";
 
-    const { row }: { row: Asset } = $props();
+    const { row, data }: { row: Asset, data: Writable<Data> } = $props();
+    let { categories, locations, tags } = $derived($data);
 </script>
 
 <div class="flex flex-row gap-2">
@@ -39,12 +41,14 @@
             </DropdownMenuItem>
             <DropdownMenuSeparator/>
             <DropdownMenuSub>
-                <DropdownMenuSubTrigger>Set Category</DropdownMenuSubTrigger>
+                <DropdownMenuSubTrigger>
+                    <Boxes /> Set Category
+                </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                     <DropdownMenuRadioGroup value={row.label}>
-                        {#each labels as label}
-                            <DropdownMenuRadioItem value={label.value}>
-                                {label.label}
+                        {#each categories as category}
+                            <DropdownMenuRadioItem value={category.id}>
+                                {category.name}
                             </DropdownMenuRadioItem>
                         {/each}
                     </DropdownMenuRadioGroup>

@@ -9,6 +9,7 @@ import type { Asset, Category, Location, Tag } from "@prisma/client";
 import { categoriesToFilter, locationsToFilter, tagsToFilter } from "$lib/utils";
 import type { Component } from "svelte";
 import type { AssetWithTags } from "$lib/types";
+import { get, type Writable, writable } from "svelte/store";
 
 export type Data = {
     assets: AssetWithTags[];
@@ -17,10 +18,16 @@ export type Data = {
     tags: Tag[];
 };
 
-export function generateTable(data: Data, actionsComponent: Component<{ row: any }>) {
-    const categoryOptions: FilterOption[] = categoriesToFilter(data.categories);
-    const locationOptions: FilterOption[] = locationsToFilter(data.locations);
-    const tagOptions: FilterOption[] = tagsToFilter(data.tags);
+export function generateTable(data: Writable<Data>, actionsComponent: Component<{ row: any }>) {
+    const { assets, categories, locations, tags } = get(data);
+    const categoryOptions: Writable<FilterOption[]> = writable(categoriesToFilter(categories));
+    const locationOptions: Writable<FilterOption[]> = writable(locationsToFilter(locations));
+    const tagOptions: Writable<FilterOption[]> = writable(tagsToFilter(tags));
+    data.subscribe(() => {
+        tagOptions.set(tagsToFilter(get(data).tags));
+        categoryOptions.set(categoriesToFilter(get(data).categories));
+        locationOptions.set(locationsToFilter(get(data).locations));
+    });
 
     const filters: Filter[] = [
         { id: "category", label: "Category", options: categoryOptions },
@@ -94,11 +101,11 @@ export function generateTable(data: Data, actionsComponent: Component<{ row: any
             id: "actions",
             header: "",
             cell: ({ row }) => {
-                if (row.original) return renderComponent(actionsComponent, { row: row.original });
+                if (row.original) return renderComponent(actionsComponent, { row: row.original, data });
                 return "";
             }
         }
     ];
 
-    return { columns, filters, data: data.assets };
+    return { columns, filters, data: assets };
 }

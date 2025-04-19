@@ -4,30 +4,28 @@
     import { Plus, RotateCw } from "lucide-svelte";
     import DataTable from "$components/table/DataTable.svelte";
     import { goto } from "$app/navigation";
-    import { generateTable, type Data } from "./columns";
+    import { type Data, generateTable } from "./columns.js";
     import RowActions from "./RowActions.svelte";
     import type { Asset } from "@prisma/client";
-    import type { ColumnDef } from "@tanstack/table-core"
-    import type { Filter } from "$components/table/data"
-    import { onMount } from "svelte"
+    import type { ColumnDef } from "@tanstack/table-core";
+    import type { Filter } from "$components/table/data";
+    import { onMount } from "svelte";
+    import { writable, type Writable } from "svelte/store";
 
     $breadcrumbs = [{ label: "Assets", href: "/asset" }];
     $header = headerSnippet;
 
-    let data: Data = $state({ assets: [], categories: [], locations: [], tags: [] });
-
+    let data: Writable<Data> = writable({ assets: [], categories: [], locations: [], tags: [] });
     let tableData: {
         data: Asset[], columns: ColumnDef<Asset>[], filters: Filter[]
-    } = $derived(generateTable(data, RowActions));
-
+    } = $state(generateTable(data, RowActions));
 
     let refreshing: boolean = $state(false);
     async function refreshData() {
         refreshing = true;
         const resp = await fetch("/asset/get");
-        const newData: Data = await resp.json();
-        console.log(data);
-        data = newData;
+        data.set(await resp.json());
+        tableData = generateTable(data, RowActions);
         refreshing = false;
     }
     onMount(() => refreshData());

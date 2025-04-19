@@ -1,3 +1,5 @@
+import type { Writable } from "svelte/store";
+
 export const labels = [
     {
         value: "bug",
@@ -28,5 +30,5 @@ export type FilterOption = {
 export type Filter = {
     id: string;
     label: string;
-    options: FilterOption[];
+    options: Writable<FilterOption[]>;
 }

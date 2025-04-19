@@ -13,6 +13,7 @@
     import { PlusCircle, Circle } from "lucide-svelte";
 
     const { filter, table }: { filter: Filter, table: Table<TData> } = $props();
+    const { options } = filter;
 
     const column: Column<TData> | undefined = table.getColumn(filter.id);
     if (!column) throw new Error(`Column with id "${filter.id}" not found.`);
@@ -59,7 +60,7 @@
                     {:else}
                         {#each filters as option}
                             <Badge variant="secondary" class="rounded-sm px-1 font-normal">
-                                {filter.options.filter(o => o.value === option)[0].label}
+                                {$options.filter(o => o.value === option)[0].label}
                             </Badge>
                         {/each}
                     {/if}
@@ -73,7 +74,7 @@
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                    {#each filter.options as option}
+                    {#each $options as option}
                         {@const Icon = option.icon}
                         <CommandItem value={option.value} onSelect={() => handleSelect(option.value)}>
                             <div class={cn(

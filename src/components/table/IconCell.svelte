@@ -3,9 +3,10 @@
     import Circle from "lucide-svelte/icons/circle";
     import { Button } from "$lib/components/ui/button";
     import { goto } from "$app/navigation";
+    import type { Writable } from "svelte/store";
 
-    const { value, options }: { value: string | null, options: FilterOption[] } = $props();
-    const option = options.find((option) => option.value === value);
+    const { value, options }: { value: string | null, options: Writable<FilterOption[]> } = $props();
+    const option = $options.find((option) => option.value === value);
     const Icon = option?.icon;
 </script>
 

@@ -1,4 +1,4 @@
-<script lang="ts" generics="TData, TValue">
+<script lang="ts" generics="TData">
     import {
         getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
         type ColumnDef, type ColumnFiltersState, type GlobalFilterTableState, type PaginationState,
