@@ -6,8 +6,8 @@
     import type { Writable } from "svelte/store";
 
     const { value, options }: { value: string | null, options: Writable<FilterOption[]> } = $props();
-    const option = $options.find((option) => option.value === value);
-    const Icon = option?.icon;
+    const option = $derived($options.find((option) => option.value === value));
+    const Icon = $derived(option?.icon);
 </script>
 
 {#if value && option}

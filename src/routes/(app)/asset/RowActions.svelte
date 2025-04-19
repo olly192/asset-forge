@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
-        DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem,
-        DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger
+        DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub,
+        DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuCheckboxItem
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
     import { Archive, Boxes, Ellipsis, Eye, Pen, Trash } from "lucide-svelte";
@@ -9,9 +9,19 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
+    import { nameToIcon } from "$lib/utils"
 
     const { row, data }: { row: Asset, data: Writable<Data> } = $props();
     let { categories, locations, tags } = $derived($data);
+
+    function setCategory(categoryId: string) {
+        row.categoryId = row.categoryId === categoryId ? null : categoryId
+        fetch(`/asset/${row.id}/update`, {
+            method: "POST",
+            body: JSON.stringify({ categoryId }),
+            headers: { "Content-Type": "application/json" }
+        })
+    }
 </script>
 
 <div class="flex flex-row gap-2">
@@ -45,13 +55,16 @@
                     <Boxes /> Set Category
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup value={row.label}>
-                        {#each categories as category}
-                            <DropdownMenuRadioItem value={category.id}>
-                                {category.name}
-                            </DropdownMenuRadioItem>
-                        {/each}
-                    </DropdownMenuRadioGroup>
+                    {#each categories as category}
+                        {@const Icon = nameToIcon(category.icon)}
+                        <DropdownMenuCheckboxItem
+                            value={category.id} checked={row.categoryId === category.id}
+                            onclick={() => setCategory(category.id)}
+                        >
+                            <Icon class="size-4 mr-2 stroke-{category.color || 'neutral'}-500" />
+                            {category.name}
+                        </DropdownMenuCheckboxItem>
+                    {/each}
                 </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator/>
