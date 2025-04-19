@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/table-core";
+import type { ColumnDef, Row } from "@tanstack/table-core";
 import { renderComponent } from "$lib/components/ui/data-table/index.js";
 import CheckboxCell from "$components/table/CheckboxCell.svelte";
 import IconCell from "$components/table/IconCell.svelte";
@@ -60,10 +60,10 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
             id: "ID",
             accessorKey: "assetId",
             header: "Asset ID",
-            enableSorting: false,
             cell: ({ getValue }) => {
                 return renderComponent(IdCell, { value: getValue() as string });
-            }
+            },
+            sortingFn: ({ original: a }: Row<any>, { original: b }: Row<any>) => a.assetId.localeCompare(b.assetId)
         },
         {
             id: "name",

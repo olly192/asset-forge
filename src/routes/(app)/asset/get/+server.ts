@@ -10,7 +10,8 @@ export async function GET({ request }) {
 
     const assets: UnmappedAssetWithTags[] = await prisma.asset.findMany({
         where: { archived: false, deleted: undefined },
-        include: { tags: { select: { id: true } } }
+        include: { tags: { select: { id: true } } },
+        orderBy: { assetId: "asc" }
     });
     const categories: Category[] = await prisma.category.findMany();
     const locations: Location[] = await prisma.location.findMany();
