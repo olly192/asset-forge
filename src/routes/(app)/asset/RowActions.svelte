@@ -9,27 +9,30 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
-    import { nameToIcon } from "$lib/utils"
+    import { nameToIcon } from "$lib/utils";
+    import { toast } from "svelte-sonner";
 
     const { row, data }: { row: Asset, data: Writable<Data> } = $props();
     let { categories, locations, tags } = $derived($data);
 
-    function setCategory(categoryId: string) {
+    async function setCategory(categoryId: string) {
         row.categoryId = row.categoryId === categoryId ? null : categoryId
-        fetch(`/asset/${row.id}/update`, {
+        const resp = await fetch(`/asset/${row.id}/update`, {
             method: "POST",
             body: JSON.stringify({ categoryId }),
             headers: { "Content-Type": "application/json" }
         })
+        if (resp.ok) toast.success("Category updated successfully.");
     }
 
-    function setLocation(locationId: string) {
+    async function setLocation(locationId: string) {
         row.locationId = row.locationId === locationId ? null : locationId
-        fetch(`/asset/${row.id}/update`, {
+        const resp = await fetch(`/asset/${row.id}/update`, {
             method: "POST",
             body: JSON.stringify({ locationId }),
             headers: { "Content-Type": "application/json" }
         })
+        if (resp.ok) toast.success("Location updated successfully.");
     }
 </script>
 
