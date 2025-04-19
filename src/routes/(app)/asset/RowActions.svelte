@@ -4,7 +4,7 @@
         DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuCheckboxItem
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Archive, Boxes, Ellipsis, Eye, Pen, Trash } from "lucide-svelte";
+    import { Archive, Boxes, Ellipsis, Eye, Map, Pen, Trash } from "lucide-svelte";
     import type { Asset } from "@prisma/client";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
@@ -19,6 +19,15 @@
         fetch(`/asset/${row.id}/update`, {
             method: "POST",
             body: JSON.stringify({ categoryId }),
+            headers: { "Content-Type": "application/json" }
+        })
+    }
+
+    function setLocation(locationId: string) {
+        row.locationId = row.locationId === locationId ? null : locationId
+        fetch(`/asset/${row.id}/update`, {
+            method: "POST",
+            body: JSON.stringify({ locationId }),
             headers: { "Content-Type": "application/json" }
         })
     }
@@ -58,11 +67,28 @@
                     {#each categories as category}
                         {@const Icon = nameToIcon(category.icon)}
                         <DropdownMenuCheckboxItem
-                            value={category.id} checked={row.categoryId === category.id}
+                            checked={row.categoryId === category.id}
                             onclick={() => setCategory(category.id)}
                         >
                             <Icon class="size-4 mr-2 stroke-{category.color || 'neutral'}-500" />
                             {category.name}
+                        </DropdownMenuCheckboxItem>
+                    {/each}
+                </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                    <Map /> Set Location
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                    {#each locations as location}
+                        {@const Icon = nameToIcon(location.icon)}
+                        <DropdownMenuCheckboxItem
+                            checked={row.locationId === location.id}
+                            onclick={() => setLocation(location.id)}
+                        >
+                            <Icon class="size-4 mr-2 stroke-{location.color || 'neutral'}-500" />
+                            {location.name}
                         </DropdownMenuCheckboxItem>
                     {/each}
                 </DropdownMenuSubContent>

@@ -33,5 +33,20 @@ export const POST: RequestHandler = async ({ request, params }) => {
         });
     }
 
+    if (data.locationId !== undefined) {
+        if (data.locationId !== null) {
+            const location = await prisma.location.findUnique({
+                where: { id: data.locationId, deleted: null }
+            });
+            if (!location) return error(404, { message: "Location not found" });
+        }
+        await prisma.asset.update({
+            where: { id: assetId },
+            data: {
+                location: (data.locationId === null ? { disconnect: true } : { connect: { id: data.locationId } })
+            }
+        });
+    }
+
     return json("Asset updated successfully");
 }
