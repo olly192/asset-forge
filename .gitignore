@@ -3,6 +3,8 @@ data
 .idea
 .vscode
 prisma/migrations
+package-lock.json
+bun.lock
 
 # Output
 .output
