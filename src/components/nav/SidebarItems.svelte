@@ -1,19 +1,20 @@
 <script lang="ts">
     import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "$lib/components/ui/collapsible";
     import {
-        SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-        SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem
-    } from "$lib/components/ui/sidebar"
-    import { Boxes, Package, ScanSearch, Settings, Tag, ChevronRight, ChartPie, Map, Calendar } from "lucide-svelte";
+        SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton,
+        SidebarMenuSubItem
+    } from "$lib/components/ui/sidebar";
+    import { Boxes, Package, ScanSearch, Settings, Tag, ChevronRight, ChartPie, Map, PencilRuler } from "lucide-svelte";
     import { goto } from "$app/navigation";
 
     const nav = [
         { title: "Dashboard", url: "/", icon: ChartPie },
         { title: "Assets", url: "/asset", icon: Package },
-        { title: "Locations", url: "/location", icon: Map },
+        { title: "Asset Types", url: "/types", icon: PencilRuler },
         { title: "Categories", url: "/category", icon: Boxes },
         { title: "Tags", url: "/tag", icon: Tag },
-        { title: "Bookings", url: "/booking", icon: Calendar },
+        { title: "Locations", url: "/location", icon: Map },
+        // { title: "Bookings", url: "/booking", icon: Calendar },
         { title: "Scanner", url: "/scanner", icon: ScanSearch },
         {
             title: "Workspace Settings",
@@ -33,6 +34,7 @@
 <SidebarGroup>
     <SidebarMenu>
         {#each nav as item (item.title)}
+            {@const Icon = item.icon}
             {#if item.children}
                 <Collapsible open={item.active} class="group/collapsible">
                     {#snippet child({ props })}
@@ -44,7 +46,7 @@
                                             {item.title}
                                         {/snippet}
                                         {#if item.icon}
-                                            <item.icon />
+                                            <Icon />
                                         {/if}
                                         <span>{item.title}</span>
                                         <ChevronRight class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
@@ -71,7 +73,7 @@
                         {#snippet tooltipContent()}
                             {item.title}
                         {/snippet}
-                        <item.icon />
+                        <Icon />
                         <span>{item.title}</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
