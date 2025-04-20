@@ -31,4 +31,5 @@ export type Filter = {
     id: string;
     label: string;
     options: Writable<FilterOption[]>;
+    default?: string[];
 }

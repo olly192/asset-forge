@@ -18,6 +18,8 @@
     const column: Column<TData> | undefined = table.getColumn(filter.id);
     if (!column) throw new Error(`Column with id "${filter.id}" not found.`);
 
+    if (filter.default) column.setFilterValue(filter.default);
+
     let filters: string[] = $derived(column.getFilterValue() as string[] ?? []);
 
     function handleSelect(currentValue: string) {

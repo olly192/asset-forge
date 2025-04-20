@@ -10,6 +10,7 @@ import { categoriesToFilter, locationsToFilter, tagsToFilter } from "$lib/utils"
 import type { Component } from "svelte";
 import type { AssetWithTags } from "$lib/types";
 import { get, type Writable, writable } from "svelte/store";
+import { Archive, ArchiveX } from "lucide-svelte"
 
 export type Data = {
     assets: AssetWithTags[];
@@ -23,6 +24,10 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
     const categoryOptions: Writable<FilterOption[]> = writable(categoriesToFilter(categories));
     const locationOptions: Writable<FilterOption[]> = writable(locationsToFilter(locations));
     const tagOptions: Writable<FilterOption[]> = writable(tagsToFilter(tags));
+    const archivedFilter: Writable<FilterOption[]> = writable([
+        { value: "true", label: "True", icon: Archive, color: "red" },
+        { value: "false", label: "False", icon: ArchiveX, color: "green" }
+    ])
     data.subscribe(() => {
         tagOptions.set(tagsToFilter(get(data).tags));
         categoryOptions.set(categoriesToFilter(get(data).categories));
@@ -32,7 +37,8 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
     const filters: Filter[] = [
         { id: "category", label: "Category", options: categoryOptions },
         { id: "location", label: "Location", options: locationOptions },
-        { id: "tags", label: "Tags", options: tagOptions }
+        { id: "tags", label: "Tags", options: tagOptions },
+        { id: "archived", label: "Archived", options: archivedFilter, default: ["false"] }
     ]
 
     const columns: ColumnDef<Asset>[] = [
@@ -96,6 +102,17 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
                 return renderComponent(IconCell, { value: row.original.locationId, options: locationOptions });
             },
             filterFn: "arrIncludesSome"
+        },
+        {
+            id: "archived",
+            accessorKey: "archived",
+            header: "Archived",
+            cell: ({ row }) => {
+                return renderComponent(CheckboxCell, { checked: row.original.archived, disabled: true });
+            },
+            filterFn: (row, _, filterValue) => {
+                return filterValue.length === 0 || filterValue.includes(row.original.archived.toString())
+            }
         },
         {
             id: "actions",

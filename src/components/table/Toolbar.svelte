@@ -31,9 +31,8 @@
         {/each}
 
         {#if colsWithFilter.length || table.getState().globalFilter}
-            <Button onclick={resetFilters} variant="outline" class="h-8">
-                <X class="size-4" />
-                Reset Filters
+            <Button onclick={resetFilters} variant="outline" size="sm">
+                <X class="size-4" /> Clear Filters
             </Button>
         {/if}
     </div>

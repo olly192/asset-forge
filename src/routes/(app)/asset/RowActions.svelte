@@ -4,13 +4,17 @@
         DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuCheckboxItem
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Archive, Boxes, Circle, Ellipsis, Eye, Map, Pen, Tag, Trash } from "lucide-svelte";
+    import { Archive, ArchiveRestore, Boxes, Circle, Ellipsis, Eye, Map, Pen, Tag, Trash } from "lucide-svelte";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
     import { nameToIcon } from "$lib/utils";
     import { toast } from "svelte-sonner";
-    import type { AssetWithTags } from "$lib/types"
+    import type { AssetWithTags } from "$lib/types";
+    import {
+        AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+        AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
+    } from "$lib/components/ui/alert-dialog";
 
     const { row, data }: { row: AssetWithTags, data: Writable<Data> } = $props();
     let { categories, locations, tags } = $derived($data);
@@ -43,6 +47,27 @@
             headers: { "Content-Type": "application/json" }
         })
         if (resp.ok) toast.success("Tags updated successfully.");
+    }
+
+    let deleteDialogOpen: boolean = $state(false);
+
+    async function archiveAsset() {
+        await fetch(`/asset/${row.id}/archive`, { method: "POST" });
+        // await refreshData();
+        toast.success("Asset archived successfully");
+    }
+
+    async function restoreAsset() {
+        await fetch(`/asset/${row.id}/restore`, { method: "POST" });
+        // await refreshData();
+        toast.success("Asset restored successfully");
+    }
+
+    async function deleteAsset() {
+        await fetch(`/asset/${row.id}/delete`, { method: "POST" });
+        // await refreshData();
+        deleteDialogOpen = false;
+        toast.success("Asset deleted successfully");
     }
 </script>
 
@@ -121,12 +146,34 @@
                 </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator/>
-            <DropdownMenuItem>
-                <Archive /> Archive
-            </DropdownMenuItem>
-            <DropdownMenuItem>
+            {#if row.archived}
+                <DropdownMenuItem onclick={restoreAsset}>
+                    <ArchiveRestore /> Restore
+                </DropdownMenuItem>
+            {:else}
+                <DropdownMenuItem onclick={archiveAsset}>
+                    <Archive /> Archive
+                </DropdownMenuItem>
+            {/if}
+            <DropdownMenuItem onclick={() => deleteDialogOpen = true}>
                 <Trash /> Delete
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
 </div>
+
+<AlertDialog bind:open={deleteDialogOpen}>
+    <AlertDialogContent>
+        <AlertDialogHeader>
+            <AlertDialogTitle>Delete Asset?</AlertDialogTitle>
+            <AlertDialogDescription>Are you sure you want to delete this asset?</AlertDialogDescription>
+        </AlertDialogHeader>
+        <div class="flex flex-row items-center gap-2">
+            {row.name}
+        </div>
+        <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onclick={deleteAsset}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+    </AlertDialogContent>
+</AlertDialog>

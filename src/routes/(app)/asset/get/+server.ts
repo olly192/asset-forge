@@ -9,7 +9,7 @@ export async function GET({ request }) {
     if (!session?.user) return error(403, "Unauthorized");
 
     const assets: UnmappedAssetWithTags[] = await prisma.asset.findMany({
-        where: { archived: false, deleted: undefined },
+        where: { deleted: undefined },
         include: { tags: { select: { id: true } } },
         orderBy: { assetId: "asc" }
     });
