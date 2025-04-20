@@ -4,7 +4,7 @@
         DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuCheckboxItem
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Archive, ArchiveRestore, Boxes, Circle, Ellipsis, Eye, Map, Pen, Tag, Trash } from "lucide-svelte";
+    import { Archive, ArchiveRestore, Circle, Ellipsis, Eye, Map, Pen, Tag, Trash } from "lucide-svelte";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
@@ -17,17 +17,7 @@
     } from "$lib/components/ui/alert-dialog";
 
     const { row, data, refreshData }: { row: AssetWithTags, data: Writable<Data>, refreshData: Function } = $props();
-    let { categories, locations, tags } = $derived($data);
-
-    async function setCategory(categoryId: string) {
-        row.categoryId = row.categoryId === categoryId ? null : categoryId
-        const resp = await fetch(`/asset/${row.id}/update`, {
-            method: "POST",
-            body: JSON.stringify({ categoryId }),
-            headers: { "Content-Type": "application/json" }
-        })
-        if (resp.ok) toast.success("Category updated successfully.");
-    }
+    let { locations, tags } = $derived($data);
 
     async function setLocation(locationId: string) {
         row.locationId = row.locationId === locationId ? null : locationId
@@ -99,23 +89,6 @@
             <DropdownMenuSeparator/>
             <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                    <Boxes /> Set Category
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                    {#each categories as category}
-                        {@const Icon = nameToIcon(category.icon)}
-                        <DropdownMenuCheckboxItem
-                            checked={row.categoryId === category.id}
-                            onclick={() => setCategory(category.id)}
-                        >
-                            <Icon class="size-4 mr-2 stroke-{category.color || 'neutral'}-500" />
-                            {category.name}
-                        </DropdownMenuCheckboxItem>
-                    {/each}
-                </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
                     <Map /> Set Location
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
@@ -169,7 +142,7 @@
             <AlertDialogDescription>Are you sure you want to delete this asset?</AlertDialogDescription>
         </AlertDialogHeader>
         <div class="flex flex-row items-center gap-2">
-            {row.name}
+            {row.assetId}
         </div>
         <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>

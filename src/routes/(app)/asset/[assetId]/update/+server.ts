@@ -15,23 +15,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
     });
     if (!asset) return error(404, { message: "Asset not found" });
 
-    const data: { categoryId?: string | null, locationId?: string, tagIds?: string[] } = await request.json();
+    const data: { locationId?: string, tagIds?: string[] } = await request.json();
     if (!data) return error(400, { message: "No data provided" });
-
-    if (data.categoryId !== undefined) {
-        if (data.categoryId !== null) {
-            const category = await prisma.category.findUnique({
-                where: { id: data.categoryId, deleted: null }
-            });
-            if (!category) return error(404, { message: "Category not found" });
-        }
-        await prisma.asset.update({
-            where: { id: assetId },
-            data: {
-                category: (data.categoryId === null ? { disconnect: true } : { connect: { id: data.categoryId } })
-            }
-        });
-    }
 
     if (data.locationId !== undefined) {
         if (data.locationId !== null) {

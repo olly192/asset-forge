@@ -8,7 +8,7 @@ export async function GET({ request }) {
     const session = await auth.api.getSession(request);
     if (!session?.user) return error(403, "Unauthorized");
 
-    const assets: UnmappedAssetWithTags[] = await prisma.asset.findMany({
+    const unmappedAssets: UnmappedAssetWithTags[] = await prisma.asset.findMany({
         where: { deleted: null },
         include: { tags: { select: { id: true } } },
         orderBy: { assetId: "asc" }
@@ -16,10 +16,11 @@ export async function GET({ request }) {
     const categories: Category[] = await prisma.category.findMany();
     const locations: Location[] = await prisma.location.findMany();
     const tags: Tag[] = await prisma.tag.findMany();
+    const assetTypes = await prisma.assetType.findMany();
 
-    const mappedAssets: AssetWithTags[] = assets.map((asset: UnmappedAssetWithTags) => ({
+    const assets: AssetWithTags[] = unmappedAssets.map((asset: UnmappedAssetWithTags) => ({
         ...asset, tags: asset.tags.map((tag: { id: string }) => tag.id
     )}));
 
-    return json({ assets: mappedAssets, categories, locations, tags });
+    return json({ assets, categories, locations, tags, assetTypes });
 }

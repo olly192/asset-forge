@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Category, Location, Tag } from "@prisma/client";
+import type { AssetType, Category, Location, Tag } from "@prisma/client";
 import type { Color, FilterOption } from "$components/table/data";
 import * as icons from "lucide-svelte";
 
@@ -42,3 +42,11 @@ export function tagsToFilter(tags: Tag[]): FilterOption[] {
 	}))
 }
 
+export function assetTypeToFilter(types: AssetType[]): FilterOption[] {
+	if (!types) return [];
+	return types.map((type: AssetType) => ({
+		value: type.id,
+		label: type.name,
+		url: `/type/${type.id}/edit`
+	}))
+}

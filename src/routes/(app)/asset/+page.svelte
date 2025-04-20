@@ -15,7 +15,7 @@
     $breadcrumbs = [{ label: "Assets", href: "/asset" }];
     $header = headerSnippet;
 
-    let data: Writable<Data> = writable({ assets: [], categories: [], locations: [], tags: [] });
+    let data: Writable<Data> = writable({ assets: [], categories: [], locations: [], tags: [], assetTypes: [] });
     let tableData: {
         data: Asset[], columns: ColumnDef<Asset>[], filters: Filter[]
     } = $state(generateTable(data, RowActions, refreshData));

@@ -75,15 +75,12 @@ model Verification {
 model Asset {
   id           String    @id @default(uuid())
   assetId      String
-  name         String
-  image        String?
-  description  String?
-  category     Category? @relation(fields: [categoryId], references: [id])
-  categoryId   String?
+  type         AssetType @relation(fields: [typeId], references: [id])
+  typeId       String
+  notes        String?
   tags         Tag[]
   location     Location? @relation(fields: [locationId], references: [id])
   locationId   String?
-  value        Float?
   customFields Json?
   archived     Boolean   @default(false)
   deleted      DateTime?
@@ -93,20 +90,37 @@ model Asset {
   @@map("asset")
 }
 
+model AssetType {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  value       Float?
+  assets      Asset[]
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  archived    Boolean   @default(false)
+  deleted     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("asset_type")
+}
+
 model Category {
-  id          String     @id @default(uuid())
+  id          String      @id @default(uuid())
   name        String
   description String?
   icon        String
   color       String
-  assets      Asset[]
-  chilren     Category[] @relation("Categories")
-  parent      Category?  @relation("Categories", fields: [parentId], references: [id])
+  assetTypes  AssetType[]
+  chilren     Category[]  @relation("Categories")
+  parent      Category?   @relation("Categories", fields: [parentId], references: [id])
   parentId    String?
-  archived    Boolean    @default(false)
+  archived    Boolean     @default(false)
   deleted     DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@map("category")
 }
