@@ -17,7 +17,7 @@ export function categoriesToFilter(categories: Category[]): FilterOption[] {
 		label: category.name,
 		icon: category.icon && nameToIcon(category.icon),
 		color: category.color as Color,
-		url: `/category/${category.id}`
+		url: `/category/${category.id}/edit`
 	}))
 }
 
@@ -28,7 +28,7 @@ export function locationsToFilter(locations: Location[]): FilterOption[] {
 		label: location.name,
 		icon: location.icon && nameToIcon(location.icon),
 		color: location.color as Color,
-		url: `/location/${location.id}`
+		url: `/location/${location.id}/edit`
 	}))
 }
 
@@ -38,7 +38,7 @@ export function tagsToFilter(tags: Tag[]): FilterOption[] {
 		value: tag.id,
 		label: tag.name,
 		color: tag.color as Color,
-		url: `/tag/${tag.id}`
+		url: `/tag/${tag.id}/edit`
 	}))
 }
 
