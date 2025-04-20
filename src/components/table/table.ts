@@ -1,10 +1,9 @@
 import {
     getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-    type ColumnDef,
-    type ColumnFiltersState, type GlobalFilterTableState, type PaginationState,
+    type ColumnDef, type ColumnFiltersState, type GlobalFilterTableState, type PaginationState,
     type RowSelectionState, type SortingState, type VisibilityState
 } from "@tanstack/table-core";
-import { createSvelteTable, FlexRender } from "$lib/components/ui/data-table";
+import { createSvelteTable } from "$lib/components/ui/data-table";
 
 export function createTable<TData>(data: TData[], columns: ColumnDef<TData>[],) {
     let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });

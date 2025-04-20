@@ -5,6 +5,7 @@ data
 prisma/migrations
 package-lock.json
 bun.lock
+qodana.yaml
 
 # Output
 .output
