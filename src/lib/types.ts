@@ -4,7 +4,6 @@ export type AssetWithTags = Asset & { tags: string[] };
 export type UnmappedAssetWithTags = Asset & { tags: { id: string }[] };
 export type FullAsset = Asset & {
     location: Location | null;
-    category: Category | null;
     tags: Tag[];
-    type: AssetType;
+    type: AssetType & { category: Category | null };
 };

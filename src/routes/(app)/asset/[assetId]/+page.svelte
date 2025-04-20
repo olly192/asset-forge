@@ -17,50 +17,34 @@
 
     $breadcrumbs = [
         { label: "Assets", href: "/asset" },
-        { label: asset.name, href: `/asset/${asset.id}` }
+        { label: asset.assetId, href: `/asset/${asset.id}` }
     ];
     $header = headerSnippet;
 </script>
 
 {#snippet headerSnippet()}
     <div class="header">
-        <h1>{asset.name}</h1>
+        <h1>{asset.type.name}</h1>
         <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
             <Edit /> Edit
         </Button>
     </div>
 {/snippet}
 
-<main class="w-full max-w-lg m-8">
+<main class="w-full p-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
     <Card>
         <CardHeader>
-            <CardTitle>New Category</CardTitle>
+            <CardTitle>Asset Details</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2">
             <div class="space-y-2">
-                <Label>Asset Name</Label>
-                <Input value={asset.name} readonly />
+                <Label>Asset ID</Label>
+                <Input value={asset.assetId} readonly />
             </div>
 
             <div class="space-y-2">
-                <Label>Description</Label>
-                <Textarea value={asset.description} readonly />
-            </div>
-
-            <div class="flex flex-col items-start gap-2">
-                <Label>Category</Label>
-                {#if asset.category}
-                    {@const CategoryIcon = nameToIcon(asset.category.icon)}
-                    <Button variant="outline" size="sm" onclick={() => goto(`/category/${asset.category.id}/edit`)}>
-                        <CategoryIcon class="stroke-{asset.category.color}-500 size-4" />
-                        <span>{asset.category.name}</span>
-                    </Button>
-                {:else}
-                    <Button variant="outline" size="sm" disabled>
-                        <Circle class="stroke-neutral-700 size-4" />
-                        <span class="opacity-60">No Category</span>
-                    </Button>
-                {/if}
+                <Label>Notes</Label>
+                <Textarea value={asset.notes} readonly />
             </div>
 
             <div class="flex flex-col items-start gap-2">
@@ -92,6 +76,38 @@
                         </Badge>
                     {/each}
                 </div>
+            </div>
+        </CardContent>
+    </Card>
+    <Card>
+        <CardHeader>
+            <CardTitle>Asset Type</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-2">
+            <div class="space-y-2">
+                <Label>Name</Label>
+                <Input value={asset.type.name} readonly />
+            </div>
+
+            <div class="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={asset.type.description} readonly />
+            </div>
+
+            <div class="flex flex-col items-start gap-2">
+                <Label>Category</Label>
+                {#if asset.type.category}
+                    {@const CategoryIcon = nameToIcon(asset.type.category.icon)}
+                    <Button variant="outline" size="sm" onclick={() => goto(`/category/${asset.type.category.id}/edit`)}>
+                        <CategoryIcon class="stroke-{asset.type.category.color}-500 size-4" />
+                        <span>{asset.type.category.name}</span>
+                    </Button>
+                {:else}
+                    <Button variant="outline" size="sm" disabled>
+                        <Circle class="stroke-neutral-700 size-4" />
+                        <span class="opacity-60">No Category</span>
+                    </Button>
+                {/if}
             </div>
         </CardContent>
     </Card>

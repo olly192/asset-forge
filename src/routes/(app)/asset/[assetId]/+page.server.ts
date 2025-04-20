@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
 
     const asset: FullAsset | null = await prisma.asset.findUnique({
         where: { id: assetId, deleted: null },
-        include: { category: true, location: true, tags: true }
+        include: { location: true, tags: true, type: { include: { category: true } } }
     });
     if (!asset) return fail(404, { message: "Asset not found" });
 
