@@ -3,7 +3,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
-    import { Circle, Edit, Pencil, PencilRuler } from "lucide-svelte";
+    import { Circle, Pencil, PencilRuler } from "lucide-svelte";
     import { Textarea } from "$lib/components/ui/textarea"
     import { goto } from "$app/navigation";
     import type { PageProps } from './$types';

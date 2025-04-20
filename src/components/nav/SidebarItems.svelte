@@ -10,7 +10,7 @@
     const nav = [
         { title: "Dashboard", url: "/", icon: ChartPie },
         { title: "Assets", url: "/asset", icon: Package },
-        { title: "Asset Types", url: "/types", icon: PencilRuler },
+        { title: "Asset Types", url: "/type", icon: PencilRuler },
         { title: "Categories", url: "/category", icon: Boxes },
         { title: "Tags", url: "/tag", icon: Tag },
         { title: "Locations", url: "/location", icon: Map },

@@ -7,3 +7,7 @@ export type FullAsset = Asset & {
     tags: Tag[];
     type: AssetType & { category: Category | null };
 };
+export type FullAssetType = AssetType & {
+    category: Category | null
+    assets: Asset[]
+};
