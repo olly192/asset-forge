@@ -7,7 +7,7 @@
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
     import { tagSchema, type TagSchema } from "../../schema";
-    import { Save } from "lucide-svelte";
+    import { Circle, Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { Textarea } from "$lib/components/ui/textarea";
     import ColorSelect from "$components/ColorSelect.svelte";
@@ -38,7 +38,10 @@
 
 {#snippet headerSnippet()}
     <div class="header">
-        <h1>Edit Tag</h1>
+        <h1 class="flex flex-row items-center gap-4">
+            <Circle class="size-8 fill-{$formData.color || 'neutral'}-500 stroke-{$formData.color || 'neutral'}-700" />
+            {$formData.name}
+        </h1>
         <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
             <Save /> Save
         </Button>

@@ -9,11 +9,12 @@
     import { locationSchema, type LocationSchema } from "../../schema";
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
-    import ColorSelect from "$components/ColorSelect.svelte"
-    import IconSelect from "$components/IconSelect.svelte"
-    import { goto } from "$app/navigation"
-    import LocationSelect from "$components/LocationSelect.svelte"
-    import { page } from "$app/state"
+    import ColorSelect from "$components/ColorSelect.svelte";
+    import IconSelect from "$components/IconSelect.svelte";
+    import { goto } from "$app/navigation";
+    import LocationSelect from "$components/LocationSelect.svelte";
+    import { page } from "$app/state";
+    import { nameToIcon } from "$lib/utils";
 
     $header = headerSnippet
 
@@ -39,8 +40,12 @@
 </script>
 
 {#snippet headerSnippet()}
+    {@const Icon = nameToIcon($formData.icon)}
     <div class="header">
-        <h1>Edit Location</h1>
+        <h1 class="flex flex-row items-center gap-4">
+            <Icon class="size-8 stroke-{$formData.color ? $formData.color + '-500' : 'white'}" />
+            {$formData.name}
+        </h1>
         <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
             <Save /> Save
         </Button>
