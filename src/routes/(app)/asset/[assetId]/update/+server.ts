@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     });
     if (!asset) return error(404, { message: "Asset not found" });
 
-    const data: { categoryId?: string | null, locationId?: string, tagIds?: string } = await request.json();
+    const data: { categoryId?: string | null, locationId?: string, tagIds?: string[] } = await request.json();
     if (!data) return error(400, { message: "No data provided" });
 
     if (data.categoryId !== undefined) {
@@ -44,6 +44,19 @@ export const POST: RequestHandler = async ({ request, params }) => {
             where: { id: assetId },
             data: {
                 location: (data.locationId === null ? { disconnect: true } : { connect: { id: data.locationId } })
+            }
+        });
+    }
+
+    if(data.tagIds) {
+        const tags = await prisma.tag.findMany({
+            where: { id: { in: data.tagIds }, deleted: null }
+        })
+        if (tags.length !== data.tagIds.length) return error(404, { message: "Tags not found" });
+        await prisma.asset.update({
+            where: { id: assetId },
+            data: {
+                tags: { set: tags.map(tag => ({ id: tag.id })) }
             }
         });
     }

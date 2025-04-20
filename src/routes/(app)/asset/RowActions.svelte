@@ -4,15 +4,15 @@
         DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuCheckboxItem
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
-    import { Archive, Boxes, Ellipsis, Eye, Map, Pen, Trash } from "lucide-svelte";
-    import type { Asset } from "@prisma/client";
+    import { Archive, Boxes, Circle, Ellipsis, Eye, Map, Pen, Tag, Trash } from "lucide-svelte";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
     import { nameToIcon } from "$lib/utils";
     import { toast } from "svelte-sonner";
+    import type { AssetWithTags } from "$lib/types"
 
-    const { row, data }: { row: Asset, data: Writable<Data> } = $props();
+    const { row, data }: { row: AssetWithTags, data: Writable<Data> } = $props();
     let { categories, locations, tags } = $derived($data);
 
     async function setCategory(categoryId: string) {
@@ -33,6 +33,16 @@
             headers: { "Content-Type": "application/json" }
         })
         if (resp.ok) toast.success("Location updated successfully.");
+    }
+
+    async function toggleTag(tagId: string) {
+        row.tags = row.tags.includes(tagId) ? row.tags.filter(id => id !== tagId) : [...row.tags, tagId];
+        const resp = await fetch(`/asset/${row.id}/update`, {
+            method: "POST",
+            body: JSON.stringify({ tagIds: row.tags }),
+            headers: { "Content-Type": "application/json" }
+        })
+        if (resp.ok) toast.success("Tags updated successfully.");
     }
 </script>
 
@@ -92,6 +102,20 @@
                         >
                             <Icon class="size-4 mr-2 stroke-{location.color || 'neutral'}-500" />
                             {location.name}
+                        </DropdownMenuCheckboxItem>
+                    {/each}
+                </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                    <Tag /> Set Tags
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                    {#each tags as tag}
+                        {@const color = tag.color || 'neutral'}
+                        <DropdownMenuCheckboxItem checked={row.tags.includes(tag.id)} onclick={() => toggleTag(tag.id)}>
+                            <Circle class="size-4 mr-2 fill-{color}-500 stroke-{color}-700" />
+                            {tag.name}
                         </DropdownMenuCheckboxItem>
                     {/each}
                 </DropdownMenuSubContent>
