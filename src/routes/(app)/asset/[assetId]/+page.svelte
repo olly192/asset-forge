@@ -3,7 +3,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
-    import { Circle, Edit } from "lucide-svelte";
+    import { Circle, Edit, Pencil, PencilRuler } from "lucide-svelte";
     import { Textarea } from "$lib/components/ui/textarea"
     import { goto } from "$app/navigation";
     import type { PageProps } from './$types';
@@ -25,9 +25,14 @@
 {#snippet headerSnippet()}
     <div class="header">
         <h1>{asset.type.name}</h1>
-        <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
-            <Edit /> Edit
-        </Button>
+        <div>
+            <Button onclick={() => goto(`/asset/${asset.id}/edit`)} variant="secondary">
+                <Pencil /> Edit Instance
+            </Button>
+            <Button onclick={() => goto(`/type/${asset.typeId}/edit`)} variant="secondary">
+                <PencilRuler /> Edit Type
+            </Button>
+        </div>
     </div>
 {/snippet}
 
