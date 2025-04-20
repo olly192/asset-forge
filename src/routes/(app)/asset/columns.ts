@@ -10,7 +10,7 @@ import { categoriesToFilter, locationsToFilter, tagsToFilter } from "$lib/utils"
 import type { Component } from "svelte";
 import type { AssetWithTags } from "$lib/types";
 import { get, type Writable, writable } from "svelte/store";
-import { Archive, ArchiveX } from "lucide-svelte"
+import { Archive, ArchiveX } from "lucide-svelte";
 
 export type Data = {
     assets: AssetWithTags[];
@@ -19,7 +19,7 @@ export type Data = {
     tags: Tag[];
 };
 
-export function generateTable(data: Writable<Data>, actionsComponent: Component<{ row: any }>) {
+export function generateTable(data: Writable<Data>, actionsComponent: Component<{ row: any }>, refreshData: Function) {
     const { assets, categories, locations, tags } = get(data);
     const categoryOptions: Writable<FilterOption[]> = writable(categoriesToFilter(categories));
     const locationOptions: Writable<FilterOption[]> = writable(locationsToFilter(locations));
@@ -118,7 +118,7 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
             id: "actions",
             header: "",
             cell: ({ row }) => {
-                if (row.original) return renderComponent(actionsComponent, { row: row.original, data });
+                if (row.original) return renderComponent(actionsComponent, { row: row.original, data, refreshData });
                 return "";
             }
         }

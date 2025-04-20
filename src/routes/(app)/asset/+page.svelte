@@ -18,14 +18,14 @@
     let data: Writable<Data> = writable({ assets: [], categories: [], locations: [], tags: [] });
     let tableData: {
         data: Asset[], columns: ColumnDef<Asset>[], filters: Filter[]
-    } = $state(generateTable(data, RowActions));
+    } = $state(generateTable(data, RowActions, refreshData));
 
     let refreshing: boolean = $state(false);
     async function refreshData() {
         refreshing = true;
         const resp = await fetch("/asset/get");
         data.set(await resp.json());
-        tableData = generateTable(data, RowActions);
+        tableData = generateTable(data, RowActions, refreshData);
         refreshing = false;
     }
     onMount(() => refreshData());

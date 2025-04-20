@@ -16,7 +16,7 @@
         AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
     } from "$lib/components/ui/alert-dialog";
 
-    const { row, data }: { row: AssetWithTags, data: Writable<Data> } = $props();
+    const { row, data, refreshData }: { row: AssetWithTags, data: Writable<Data>, refreshData: Function } = $props();
     let { categories, locations, tags } = $derived($data);
 
     async function setCategory(categoryId: string) {
@@ -53,19 +53,19 @@
 
     async function archiveAsset() {
         await fetch(`/asset/${row.id}/archive`, { method: "POST" });
-        // await refreshData();
+        await refreshData();
         toast.success("Asset archived successfully");
     }
 
     async function restoreAsset() {
         await fetch(`/asset/${row.id}/restore`, { method: "POST" });
-        // await refreshData();
+        await refreshData();
         toast.success("Asset restored successfully");
     }
 
     async function deleteAsset() {
         await fetch(`/asset/${row.id}/delete`, { method: "POST" });
-        // await refreshData();
+        await refreshData();
         deleteDialogOpen = false;
         toast.success("Asset deleted successfully");
     }
