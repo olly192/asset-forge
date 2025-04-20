@@ -115,7 +115,7 @@ model Tag {
   id          String    @id @default(uuid())
   name        String
   description String?
-  color       String?
+  color       String
   assets      Asset[]
   archived    Boolean   @default(false)
   deleted     DateTime?
@@ -128,8 +128,8 @@ model Tag {
 model Location {
   id        String     @id @default(uuid())
   name      String
-  icon      String?
-  color     String?
+  icon      String
+  color     String
   assets    Asset[]
   children  Location[] @relation("Locations")
   parent    Location?  @relation("Locations", fields: [parentId], references: [id])

@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-export const locationSchema: LocationSchema = v.object({
+export const locationSchema = v.object({
     name: v.pipe(
         v.string("Name is required"),
         v.nonEmpty("Name is required"),

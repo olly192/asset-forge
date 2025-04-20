@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-export const categorySchema: CategorySchema = v.object({
+export const categorySchema = v.object({
     name: v.pipe(
         v.string("Name is required"),
         v.nonEmpty("Name is required"),
