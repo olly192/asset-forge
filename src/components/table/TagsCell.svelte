@@ -16,13 +16,13 @@
             {#if tag.url}
                 <Badge
                     variant="outline" onclick={() => goto(tag.url)}
-                    class="cursor-pointer hover:bg-accent hover:text-accent-foreground rounded-full p-1.5 pr-2"
+                    class="cursor-pointer hover:bg-accent hover:text-accent-foreground rounded-full p-1.5 pr-3"
                 >
                     <Circle class="fill-{tag.color || 'neutral'}-500 stroke-{tag.color || 'neutral'}-700 mr-2 size-4" />
                     <span>{tag.label}</span>
                 </Badge>
             {:else}
-                <Badge variant="outline" class="rounded-full p-1.5 pr-2">
+                <Badge variant="outline" class="rounded-full p-1.5 pr-3">
                     <Circle class="fill-{tag.color || 'neutral'}-500 stroke-{tag.color || 'neutral'}-700 mr-2 size-4" />
                     <span>{tag.label}</span>
                 </Badge>
