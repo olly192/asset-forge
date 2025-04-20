@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { Asset } from "@prisma/client";
+import type { FullAsset } from "$lib/types";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
     const { assetId } = params;
     if (!assetId) return fail(400, { message: "Asset ID is required" });
 
-    const asset: Asset | null = await prisma.asset.findUnique({
+    const asset: FullAsset | null = await prisma.asset.findUnique({
         where: { id: assetId, deleted: null },
         include: { category: true, location: true, tags: true }
     });
