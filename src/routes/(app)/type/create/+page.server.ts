@@ -25,7 +25,7 @@ export const actions: Actions = {
         await prisma.assetType.create({
             data: {
                 name: form.data.name,
-                category: form.data.category ? { connect: { id: form.data.category } } : undefined,
+                category: form.data.category ? { connect: { id: form.data.category } } : undefined
             }
         })
 

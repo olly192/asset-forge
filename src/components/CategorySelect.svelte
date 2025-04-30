@@ -8,7 +8,7 @@
     import { cn, nameToIcon } from "$lib/utils"
     import type { Category } from "@prisma/client"
 
-    let { form, name, value = $bindable(), label, exclude } = $props();
+    let { form, name, value = $bindable(), label, exclude = null, allowNone = false } = $props();
 
     let categories: Category[] = $state([]);
 
@@ -18,6 +18,12 @@
         const resp = await fetch("/category/get");
         const newData: { categories: Category[] } = await resp.json();
         categories = newData.categories.filter(c => c.id !== exclude);
+        if (allowNone) categories.push({
+            id: undefined,
+            name: "None",
+            icon: "circle",
+            color: "neutral"
+        })
         refreshing = false;
     }
     onMount(() => refreshData());

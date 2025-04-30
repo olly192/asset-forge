@@ -6,17 +6,13 @@
     import { Input } from "$lib/components/ui/input";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
-    import { assetTypeSchema, type AssetTypeSchema } from "../schema";
+    import { assetTypeSchema, type AssetTypeSchema } from "../../schema";
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { goto } from "$app/navigation";
     import CategorySelect from "$components/CategorySelect.svelte";
 
-    $breadcrumbs = [
-        { label: "Asset Types", href: "/type" },
-        { label: "Create Type", href: "/type/create" }
-    ];
-    $header = headerSnippet
+    $header = headerSnippet;
 
     let { data }: { data: { form: SuperValidated<Infer<AssetTypeSchema>> } } = $props();
 
@@ -25,17 +21,25 @@
         onUpdated: ({ form }) => {
             if (form.valid) {
                 goto("/type");
-                toast.success("Asset type created successfully.");
+                toast.success("Asset type updated successfully.");
             }
         }
     });
 
     const { form: formData, enhance, allErrors } = form;
+
+    $breadcrumbs = [
+        { label: "Asset Types", href: "/type" },
+        { label: $formData.name },
+        { label: "Edit Type" }
+    ];
 </script>
 
 {#snippet headerSnippet()}
     <div class="header">
-        <h1>Create Asset Type</h1>
+        <h1 class="flex flex-row items-center gap-4">
+            {$formData.name}
+        </h1>
         <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
             <Save /> Save
         </Button>
@@ -45,7 +49,7 @@
 <main>
     <Card>
         <CardHeader>
-            <CardTitle>New Asset Type</CardTitle>
+            <CardTitle>Edit Asset Type</CardTitle>
         </CardHeader>
         <CardContent>
             <form method="POST" use:enhance>
