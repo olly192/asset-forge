@@ -49,7 +49,7 @@
 
             <div class="space-y-2">
                 <Label>Notes</Label>
-                <Textarea value={asset.notes} readonly />
+                <Textarea value={asset.notes} placeholder="Asset Notes" readonly />
             </div>
 
             <div class="flex flex-col items-start gap-2">
@@ -96,7 +96,7 @@
 
             <div class="space-y-2">
                 <Label>Description</Label>
-                <Textarea value={asset.type.description} readonly />
+                <Textarea value={asset.type.description} placeholder="Asset Description" readonly />
             </div>
 
             <div class="flex flex-col items-start gap-2">

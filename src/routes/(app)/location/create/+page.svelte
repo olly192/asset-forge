@@ -54,8 +54,8 @@
                 <FormField {form} name="name">
                     <FormControl>
                         {#snippet children({ props })}
-                            <FormLabel>Location Name</FormLabel>
-                            <Input {...props} bind:value={$formData.name} />
+                            <FormLabel>Name</FormLabel>
+                            <Input {...props} bind:value={$formData.name} placeholder="Location Name" />
                         {/snippet}
                     </FormControl>
                     <FormFieldErrors />

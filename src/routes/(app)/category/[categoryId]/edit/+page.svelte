@@ -63,8 +63,8 @@
                 <FormField {form} name="name">
                     <FormControl>
                         {#snippet children({ props })}
-                            <FormLabel>Category Name</FormLabel>
-                            <Input {...props} bind:value={$formData.name} />
+                            <FormLabel>Name</FormLabel>
+                            <Input {...props} bind:value={$formData.name} placeholder="Category Name" />
                         {/snippet}
                     </FormControl>
                     <FormFieldErrors />
@@ -74,7 +74,7 @@
                     <FormControl>
                         {#snippet children({ props })}
                             <FormLabel>Description</FormLabel>
-                            <Textarea {...props} bind:value={$formData.description} />
+                            <Textarea {...props} bind:value={$formData.description} placeholder="Asset Description" />
                         {/snippet}
                     </FormControl>
                     <FormFieldErrors />

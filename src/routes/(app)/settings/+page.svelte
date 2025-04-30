@@ -48,7 +48,7 @@
                     <FormControl>
                         {#snippet children({ props })}
                             <FormLabel>Name</FormLabel>
-                            <Input {...props} bind:value={$formData.name} />
+                            <Input {...props} bind:value={$formData.name} placeholder="Name" />
                         {/snippet}
                     </FormControl>
                     <FormDescription>This is your public display name.</FormDescription>
