@@ -13,10 +13,22 @@ export async function GET({ request }) {
         include: { tags: { select: { id: true } } },
         orderBy: { assetId: "asc" }
     });
-    const categories: Category[] = await prisma.category.findMany();
-    const locations: Location[] = await prisma.location.findMany();
-    const tags: Tag[] = await prisma.tag.findMany();
-    const assetTypes = await prisma.assetType.findMany();
+    const categories: Category[] = await prisma.category.findMany({
+        orderBy: { name: "asc" },
+        where: { deleted: null }
+    });
+    const locations: Location[] = await prisma.location.findMany({
+        orderBy: { name: "asc" },
+        where: { deleted: null }
+    });
+    const tags: Tag[] = await prisma.tag.findMany({
+        orderBy: { name: "asc" },
+        where: { deleted: null }
+    });
+    const assetTypes = await prisma.assetType.findMany({
+        orderBy: { name: "asc" },
+        where: { deleted: null }
+    });
 
     const assets: AssetWithTags[] = unmappedAssets.map((asset: UnmappedAssetWithTags) => ({
         ...asset, tags: asset.tags.map((tag: { id: string }) => tag.id

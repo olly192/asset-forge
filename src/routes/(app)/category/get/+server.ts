@@ -7,7 +7,10 @@ export async function GET({ request }) {
     const session = await auth.api.getSession(request);
     if (!session?.user) return error(403, "Unauthorized");
 
-    const categories: Category[] = await prisma.category.findMany({ where: { deleted: null } });
+    const categories: Category[] = await prisma.category.findMany({
+        orderBy: { name: "asc" },
+        where: { deleted: null }
+    });
 
     return json({ categories });
 }
