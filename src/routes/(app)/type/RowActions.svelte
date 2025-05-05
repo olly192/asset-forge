@@ -5,7 +5,7 @@
     } from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
     import type { AssetType } from "@prisma/client";
-    import { Archive, ArchiveRestore, Boxes, Ellipsis, Eye, Pen, Trash } from "lucide-svelte";
+    import { Archive, ArchiveRestore, Boxes, Ellipsis, Pen, Trash } from "lucide-svelte";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
@@ -52,11 +52,6 @@
 </script>
 
 <div class="flex flex-row gap-2">
-    <Button variant="ghost" size="icon-sm" onclick={() => goto(`/type/${row.id}`)}>
-        <Eye class="size-4"/>
-        <span class="sr-only">View Asset Type</span>
-    </Button>
-
     <Button variant="ghost" size="icon-sm" onclick={() => goto(`/type/${row.id}/edit`)}>
         <Pen class="size-4"/>
         <span class="sr-only">Edit Asset Type</span>
@@ -70,9 +65,6 @@
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent class="w-48" align="end">
-            <DropdownMenuItem onclick={() => goto(`/type/${row.id}`)}>
-                <Eye /> View
-            </DropdownMenuItem>
             <DropdownMenuItem onclick={() => goto(`/type/${row.id}/edit`)}>
                 <Pen /> Edit
             </DropdownMenuItem>
