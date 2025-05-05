@@ -3,20 +3,23 @@
     import type { Color } from "$components/table/data";
     import { Button } from "$lib/components/ui/button";
     import { nameToIcon } from "$lib/utils";
-    import type { Location } from "@prisma/client";
     import { CornerDownRight } from "lucide-svelte";
 
-    const { id, items, url }: {
+    type Item = {
         id: string,
-        items: { id: string, parentId: string, icon: string, color: Color, name: string }[],
-        url: (id: string) => string
-    } = $props();
+        parentId: string | null,
+        icon: string,
+        color: Color,
+        name: string
+    };
 
-    let itemPointer = items.find(item => item.id === id);
-    let itemChain = $state<Location[]>([itemPointer]);
-    while (itemPointer.parentId !== null) {
-        itemPointer = items.find(item => item.id === itemPointer.parentId);
+    const { id, items, url }: { id: string, items: Item[], url: (id: string) => string } = $props();
+
+    let itemPointer: Item | undefined = items.find(item => item.id === id);
+    let itemChain: Item[] = $state([]);
+    while (itemPointer !== undefined) {
         itemChain.push(itemPointer);
+        itemPointer = items.find(item => item.id === (itemPointer as Item).parentId);
     }
     itemChain = itemChain.reverse();
 </script>
