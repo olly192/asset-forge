@@ -33,6 +33,24 @@
     }
 </script>
 
+{#snippet locationChildren(parentId)}
+    {#each locations.filter(location => location.parentId === parentId) as location}
+        {@const LocationIcon = nameToIcon(location.icon)}
+        <CommandItem onSelect={() => selectLocation(location)} class="justify-between">
+            <div class="flex flex-row gap-2">
+                <LocationIcon class="stroke-{location.color}-500 size-4" />
+                {location.name}
+            </div>
+            <Check class={cn("size-4", value !== location.id && "text-transparent")} />
+        </CommandItem>
+        {#if locations.some(c => c.parentId === location.id)}
+            <CommandGroup class="ml-4">
+                {@render locationChildren(location.id)}
+            </CommandGroup>
+        {/if}
+    {/each}
+{/snippet}
+
 <FormField {form} {name}>
     <Popover bind:open>
         <FormControl>
@@ -61,22 +79,13 @@
                     {/snippet}
                 </PopoverTrigger>
                 <input hidden bind:value {name} />
-                <PopoverContent class="w-full p-0" align="start">
+                <PopoverContent class="w-full min-w-64 p-0" align="start">
                     <Command class="w-full">
                         <CommandInput placeholder="Search locations..." />
                         <CommandList>
-                            <CommandEmpty>No color found.</CommandEmpty>
+                            <CommandEmpty>No locations found.</CommandEmpty>
                             <CommandGroup>
-                                {#each locations as location}
-                                    {@const LocationIcon = nameToIcon(location.icon)}
-                                    <CommandItem onSelect={() => selectLocation(location)} class="justify-between">
-                                        <div class="flex flex-row gap-2">
-                                            <LocationIcon class="stroke-{location.color}-500 size-4" />
-                                            {location.name}
-                                        </div>
-                                        <Check class={cn("size-4", value !== location.id && "text-transparent")} />
-                                    </CommandItem>
-                                {/each}
+                                {@render locationChildren(null)}
                             </CommandGroup>
                         </CommandList>
                     </Command>

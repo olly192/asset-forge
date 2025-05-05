@@ -39,6 +39,24 @@
     }
 </script>
 
+{#snippet categoryChildren(parentId)}
+    {#each categories.filter(category => category.parentId === parentId) as category}
+        {@const CategoryIcon = nameToIcon(category.icon)}
+        <CommandItem onSelect={() => selectCategory(category)} class="justify-between">
+            <div class="flex flex-row gap-2">
+                <CategoryIcon class="stroke-{category.color}-500 size-4" />
+                {category.name}
+            </div>
+            <Check class={cn("size-4", value !== category.id && "text-transparent")} />
+        </CommandItem>
+        {#if categories.some(c => c.parentId === category.id)}
+            <CommandGroup class="ml-4">
+                {@render categoryChildren(category.id)}
+            </CommandGroup>
+        {/if}
+    {/each}
+{/snippet}
+
 <FormField {form} {name}>
     <Popover bind:open>
         <FormControl>
@@ -67,22 +85,13 @@
                     {/snippet}
                 </PopoverTrigger>
                 <input hidden bind:value {name} />
-                <PopoverContent class="w-full p-0" align="start">
+                <PopoverContent class="w-full min-w-64 p-0" align="start">
                     <Command class="w-full">
                         <CommandInput placeholder="Search categories..." />
                         <CommandList>
-                            <CommandEmpty>No color found.</CommandEmpty>
+                            <CommandEmpty>No categories found.</CommandEmpty>
                             <CommandGroup>
-                                {#each categories as category}
-                                    {@const CategoryIcon = nameToIcon(category.icon)}
-                                    <CommandItem onSelect={() => selectCategory(category)} class="justify-between">
-                                        <div class="flex flex-row gap-2">
-                                            <CategoryIcon class="stroke-{category.color}-500 size-4" />
-                                            {category.name}
-                                        </div>
-                                        <Check class={cn("size-4", value !== category.id && "text-transparent")} />
-                                    </CommandItem>
-                                {/each}
+                                {@render categoryChildren(null)}
                             </CommandGroup>
                         </CommandList>
                     </Command>
