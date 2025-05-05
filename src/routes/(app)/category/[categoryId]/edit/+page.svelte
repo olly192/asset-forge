@@ -74,7 +74,7 @@
                     <FormControl>
                         {#snippet children({ props })}
                             <FormLabel>Description</FormLabel>
-                            <Textarea {...props} bind:value={$formData.description} placeholder="Asset Description" />
+                            <Textarea {...props} bind:value={$formData.description} placeholder="Category Description" />
                         {/snippet}
                     </FormControl>
                     <FormFieldErrors />
