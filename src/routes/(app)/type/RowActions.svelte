@@ -51,6 +51,22 @@
     }
 </script>
 
+{#snippet categoryChildren(parentId, depth=0)}
+    {#each categories.filter(category => category.parentId === parentId) as category}
+        {@const CategoryIcon = nameToIcon(category.icon)}
+        <DropdownMenuCheckboxItem
+            checked={row.categoryId === category.id}
+            onclick={() => setCategory(category.id)}
+        >
+            <CategoryIcon class="size-4 mr-2 stroke-{category.color}-500" style="margin-left: {depth*1.5}rem" />
+            {category.name}
+        </DropdownMenuCheckboxItem>
+        {#if categories.some(c => c.parentId === category.id)}
+            {@render categoryChildren(category.id, depth + 1)}
+        {/if}
+    {/each}
+{/snippet}
+
 <div class="flex flex-row gap-2">
     <Button variant="ghost" size="icon-sm" onclick={() => goto(`/type/${row.id}/edit`)}>
         <Pen class="size-4"/>
@@ -74,16 +90,7 @@
                     <Boxes /> Set Category
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                    {#each categories as category}
-                        {@const Icon = nameToIcon(category.icon)}
-                        <DropdownMenuCheckboxItem
-                            checked={row.categoryId === category.id}
-                            onclick={() => setCategory(category.id)}
-                        >
-                            <Icon class="size-4 mr-2 stroke-{category.color || 'neutral'}-500" />
-                            {category.name}
-                        </DropdownMenuCheckboxItem>
-                    {/each}
+                    {@render categoryChildren(null)}
                 </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator/>

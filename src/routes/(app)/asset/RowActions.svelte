@@ -8,7 +8,7 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
-    import { nameToIcon } from "$lib/utils";
+    import { cn, nameToIcon } from "$lib/utils";
     import { toast } from "svelte-sonner";
     import type { AssetWithTags } from "$lib/types";
     import {
@@ -61,6 +61,22 @@
     }
 </script>
 
+{#snippet locationChildren(parentId, depth=0)}
+    {#each locations.filter(location => location.parentId === parentId) as location}
+        {@const LocationIcon = nameToIcon(location.icon)}
+        <DropdownMenuCheckboxItem
+            checked={row.locationId === location.id}
+            onclick={() => setLocation(location.id)}
+        >
+            <LocationIcon class="size-4 mr-2 stroke-{location.color}-500" style="margin-left: {depth*1.5}rem" />
+            {location.name}
+        </DropdownMenuCheckboxItem>
+        {#if locations.some(l => l.parentId === location.id)}
+            {@render locationChildren(location.id, depth + 1)}
+        {/if}
+    {/each}
+{/snippet}
+
 <div class="flex flex-row gap-2">
     <Button variant="ghost" size="icon-sm" onclick={() => goto(`/asset/${row.id}`)}>
         <Eye class="size-4"/>
@@ -92,16 +108,7 @@
                     <Map /> Set Location
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                    {#each locations as location}
-                        {@const Icon = nameToIcon(location.icon)}
-                        <DropdownMenuCheckboxItem
-                            checked={row.locationId === location.id}
-                            onclick={() => setLocation(location.id)}
-                        >
-                            <Icon class="size-4 mr-2 stroke-{location.color || 'neutral'}-500" />
-                            {location.name}
-                        </DropdownMenuCheckboxItem>
-                    {/each}
+                    {@render locationChildren(null)}
                 </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSub>
