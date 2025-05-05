@@ -1,5 +1,6 @@
 <script lang="ts">
     import NestedItems from "$components/NestedItems.svelte";
+    import IdCell from "$components/table/IdCell.svelte";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
@@ -24,9 +25,12 @@
 
 {#snippet headerSnippet()}
     <div class="header">
-        <h1>{asset.type.name}</h1>
+        <h1 class="flex flex-row items-center gap-4">
+            <span>{asset.type.name}</span>
+            <IdCell value={asset.assetId} class="bg-muted/50 p-1 pl-3 rounded-lg text-xl font-medium" />
+        </h1>
         <div>
-            <Button onclick={() => goto(`/asset/${asset.id}/edit`)} variant="secondary">
+            <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
                 <Pencil /> Edit Instance
             </Button>
             <Button onclick={() => goto(`/type/${asset.typeId}/edit`)} variant="secondary">

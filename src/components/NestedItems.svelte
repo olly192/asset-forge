@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import type { Color } from "$components/table/data";
     import { Button } from "$lib/components/ui/button";
     import { nameToIcon } from "$lib/utils";
     import { CornerDownRight } from "lucide-svelte";
@@ -9,7 +8,7 @@
         id: string,
         parentId: string | null,
         icon: string,
-        color: Color,
+        color: string,
         name: string
     };
 
