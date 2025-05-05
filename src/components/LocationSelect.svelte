@@ -43,7 +43,7 @@
             </div>
             <Check class={cn("size-4", value !== location.id && "text-transparent")} />
         </CommandItem>
-        {#if locations.some(c => c.parentId === location.id)}
+        {#if locations.some(l => l.parentId === location.id)}
             <CommandGroup class="ml-4">
                 {@render locationChildren(location.id)}
             </CommandGroup>

@@ -1,19 +1,19 @@
 <script lang="ts">
+    import NestedItems from "$components/NestedItems.svelte";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
+    import type { Category, Location } from "@prisma/client";
     import { Circle, Pencil, PencilRuler } from "lucide-svelte";
     import { Textarea } from "$lib/components/ui/textarea"
     import { goto } from "$app/navigation";
-    import type { PageProps } from './$types';
     import { Label } from "$lib/components/ui/label";
     import type { FullAsset } from "$lib/types";
-    import { nameToIcon } from "$lib/utils";
     import { Badge } from "$lib/components/ui/badge";
 
-    let { data }: PageProps = $props();
-    const { asset }: { asset: FullAsset } = data;
+    let { data }: { data: { asset: FullAsset, locations: Location[], categories: Category[] } } = $props();
+    const { asset, locations, categories }: { asset: FullAsset, locations: Location[], categories: Category[] } = data;
 
     $breadcrumbs = [
         { label: "Assets", href: "/asset" },
@@ -55,11 +55,10 @@
             <div class="flex flex-col items-start gap-2">
                 <Label>Location</Label>
                 {#if asset.location}
-                    {@const LocationIcon = nameToIcon(asset.location.icon)}
-                    <Button variant="outline" size="sm" onclick={() => goto(`/location/${asset.location.id}/edit`)}>
-                        <LocationIcon class="stroke-{asset.location.color}-500 size-4" />
-                        <span>{asset.location.name}</span>
-                    </Button>
+                    <NestedItems
+                        id={asset.location.id} items={locations}
+                        url={id => `/location/${id}/edit`}
+                    />
                 {:else}
                     <Button variant="outline" size="sm" disabled>
                         <Circle class="stroke-neutral-700 size-4" />
@@ -102,11 +101,10 @@
             <div class="flex flex-col items-start gap-2">
                 <Label>Category</Label>
                 {#if asset.type.category}
-                    {@const CategoryIcon = nameToIcon(asset.type.category.icon)}
-                    <Button variant="outline" size="sm" onclick={() => goto(`/category/${asset.type.category.id}/edit`)}>
-                        <CategoryIcon class="stroke-{asset.type.category.color}-500 size-4" />
-                        <span>{asset.type.category.name}</span>
-                    </Button>
+                    <NestedItems
+                        id={asset.type.category.id} items={categories}
+                        url={id => `/category/${id}/edit`}
+                    />
                 {:else}
                     <Button variant="outline" size="sm" disabled>
                         <Circle class="stroke-neutral-700 size-4" />

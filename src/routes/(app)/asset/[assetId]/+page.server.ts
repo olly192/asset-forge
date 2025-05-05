@@ -3,6 +3,7 @@ import { fail } from "@sveltejs/kit";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { FullAsset } from "$lib/types";
+import type { Category, Location, Tag } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -17,5 +18,9 @@ export const load: PageServerLoad = async ({ request, params }) => {
     });
     if (!asset) return fail(404, { message: "Asset not found" });
 
-    return { asset };
+    const categories: Category[] = await prisma.category.findMany({ where: { deleted: null } });
+    const tags: Tag[] = await prisma.tag.findMany({ where: { deleted: null } });
+    const locations: Location[] = await prisma.location.findMany({ where: { deleted: null } });
+
+    return { asset, categories, tags, locations };
 };
