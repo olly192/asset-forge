@@ -1,14 +1,12 @@
 <script lang="ts">
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
-    import { Circle, Check, ChevronDown } from "lucide-svelte"
+    import { Circle, Check, ChevronDown, Search } from "lucide-svelte"
     import { Popover, PopoverContent, PopoverTrigger } from "$lib/components/ui/popover"
     import { Button } from "$lib/components/ui/button"
     import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "$lib/components/ui/command"
     import { tick } from "svelte"
     import { cn } from "$lib/utils"
     import { icons } from "$components/icons"
-    import Search from "lucide-svelte/icons/search"
-
 
     let { form, name, value = $bindable(), label, color } = $props();
 

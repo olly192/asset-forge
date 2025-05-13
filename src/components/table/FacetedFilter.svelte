@@ -4,13 +4,12 @@
     import { Separator } from "$lib/components/ui/separator";
     import { Badge } from "$lib/components/ui/badge";
     import { Popover, PopoverContent, PopoverTrigger } from "$lib/components/ui/popover";
-    import Check from "lucide-svelte/icons/check";
     import {
         Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator
     } from "$lib/components/ui/command";
     import { cn } from "$lib/utils";
     import type { Filter } from "$components/table/data";
-    import { PlusCircle, Circle } from "lucide-svelte";
+    import { PlusCircle, Circle, Check } from "lucide-svelte";
 
     const { filter, table }: { filter: Filter, table: Table<TData> } = $props();
     const { options } = filter;

@@ -5,9 +5,7 @@
     import {
         DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger
     } from "$lib/components/ui/dropdown-menu";
-    import { ArrowDown, ArrowUp, EyeOff } from "lucide-svelte";
-    import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
-    import X from "lucide-svelte/icons/x";
+    import { ArrowDown, ArrowUp, ArrowUpDown, EyeOff, X } from "lucide-svelte";
 
     const { table, header, children }: {
         table: Table<TData>, header: Header<TData, any>, children: Snippet

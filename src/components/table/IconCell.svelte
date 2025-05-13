@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { FilterOption } from "$components/table/data";
-    import Circle from "lucide-svelte/icons/circle";
+    import { Circle } from "lucide-svelte";
     import { Button } from "$lib/components/ui/button";
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";

@@ -1,11 +1,11 @@
 import * as v from "valibot";
 
 export const assetSchema = v.object({
-    name: v.pipe(
-        v.string("Name is required"),
-        v.nonEmpty("Name is required"),
-        v.minLength(2, "Name must be at least 2 characters"),
-        v.maxLength(64, "Name cannot be longer than 64 characters"),
+    assetId: v.pipe(
+        v.string("Asset ID is required"),
+        v.nonEmpty("Asset ID is required"),
+        v.minLength(2, "Asset ID must be at least 2 characters"),
+        v.maxLength(64, "Asset ID cannot be longer than 64 characters"),
     ),
     notes: v.optional(v.string()),
     type: v.pipe(

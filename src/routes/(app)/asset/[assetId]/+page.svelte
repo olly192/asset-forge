@@ -18,7 +18,7 @@
 
     $breadcrumbs = [
         { label: "Assets", href: "/asset" },
-        { label: asset.assetId, href: `/asset/${asset.id}` }
+        { label: `${asset.type.name} (${asset.assetId})`, href: `/asset/${asset.id}` }
     ];
     $header = headerSnippet;
 </script>
@@ -83,6 +83,11 @@
                             <span>{tag.name}</span>
                         </Badge>
                     {/each}
+                    {#if asset.tags.length === 0}
+                        <Button variant="ghost" disabled>
+                            <Circle class="stroke-neutral-500 size-4" /> No Tags Assigned
+                        </Button>
+                    {/if}
                 </div>
             </div>
         </CardContent>

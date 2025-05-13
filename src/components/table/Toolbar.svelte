@@ -4,7 +4,7 @@
     import ViewOptions from "$components/table/ViewOptions.svelte";
     import FacetedFilter from "$components/table/FacetedFilter.svelte";
     import { Button } from "$lib/components/ui/button";
-    import X from "lucide-svelte/icons/x";
+    import { X } from "lucide-svelte";
     import type { Filter } from "$components/table/data";
 
     const { table, filters }: { table: Table<TData>, filters: Filter[]} = $props();
