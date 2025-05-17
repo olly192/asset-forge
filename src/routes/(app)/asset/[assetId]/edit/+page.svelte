@@ -2,15 +2,17 @@
     import { page } from "$app/state";
     import AssetTypeSelect from "$components/AssetTypeSelect.svelte";
     import LocationSelect from "$components/LocationSelect.svelte";
+    import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/IdCell.svelte";
     import TagSelect from "$components/TagSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
+    import { Label } from "$lib/components/ui/label";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
-    import type { AssetType } from "@prisma/client";
-    import { Save } from "lucide-svelte";
+    import type { AssetType, Category } from "@prisma/client";
+    import { Circle, Save } from "lucide-svelte";
     import { Textarea } from "$lib/components/ui/textarea"
     import { goto } from "$app/navigation";
     import { toast } from "svelte-sonner";
@@ -18,7 +20,9 @@
     import { valibotClient } from "sveltekit-superforms/adapters";
     import { assetSchema, type AssetSchema } from "../../schema";
 
-    let { data }: { data: { form: SuperValidated<Infer<AssetSchema>>, assetTypes: AssetType[] } } = $props();
+    let { data }: {
+        data: { form: SuperValidated<Infer<AssetSchema>>, assetTypes: AssetType[], categories: Category[] }
+    } = $props();
 
     const form = superForm(data.form, {
         validators: valibotClient(assetSchema),
@@ -94,36 +98,36 @@
             </form>
         </CardContent>
     </Card>
-    <!-- <Card> -->
-    <!--     <CardHeader> -->
-    <!--         <CardTitle>Asset Type</CardTitle> -->
-    <!--     </CardHeader> -->
-    <!--     <CardContent class="space-y-2"> -->
-    <!--         <div class="space-y-2"> -->
-    <!--             <Label>Name</Label> -->
-    <!--             <Input value={asset.type.name} readonly /> -->
-    <!--         </div> -->
+    <Card>
+        <CardHeader>
+            <CardTitle>Asset Type</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-2">
+            <div class="space-y-2">
+                <Label>Name</Label>
+                <Input value={assetType?.name} readonly />
+            </div>
 
-    <!--         <div class="space-y-2"> -->
-    <!--             <Label>Description</Label> -->
-    <!--             <Textarea value={asset.type.description} placeholder="Asset Description" readonly /> -->
-    <!--         </div> -->
+            <div class="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={assetType?.description} placeholder="Asset Description" readonly />
+            </div>
 
-    <!--         <div class="flex flex-col items-start gap-2"> -->
-    <!--             <Label>Category</Label> -->
-    <!--             {#if asset.type.category} -->
-    <!--                 <NestedItems -->
-    <!--                         id={asset.type.category.id} items={categories} -->
-    <!--                         url={id => `/category/${id}/edit`} -->
-    <!--                 /> -->
-    <!--             {:else} -->
-    <!--                 <Button variant="outline" size="sm" disabled> -->
-    <!--                     <Circle class="stroke-neutral-700 size-4" /> -->
-    <!--                     <span class="opacity-60">No Category</span> -->
-    <!--                 </Button> -->
-    <!--             {/if} -->
-    <!--         </div> -->
-    <!--     </CardContent> -->
-    <!-- </Card> -->
+            <div class="flex flex-col items-start gap-2">
+                <Label>Category</Label>
+                {#if assetType?.categoryId}
+                    <NestedItems
+                        id={assetType.categoryId} items={data.categories}
+                        url={id => `/category/${id}/edit`}
+                    />
+                {:else}
+                    <Button variant="outline" size="sm" disabled>
+                        <Circle class="stroke-neutral-700 size-4" />
+                        <span class="opacity-60">No Category</span>
+                    </Button>
+                {/if}
+            </div>
+        </CardContent>
+    </Card>
 </main>
 

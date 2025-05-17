@@ -6,7 +6,7 @@ import { valibot } from "sveltekit-superforms/adapters";
 import { assetSchema } from "../../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { Asset, AssetType } from "@prisma/client";
+import type { Asset, AssetType, Category } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -34,8 +34,9 @@ export const load: PageServerLoad = async ({ request, params }) => {
         where: { deleted: null },
         orderBy: { name: "asc" }
     })
+    const categories: Category[] = await prisma.category.findMany({ where: { deleted: null } });
 
-    return { form, assetTypes };
+    return { form, assetTypes, categories };
 };
 
 export const actions: Actions = {
