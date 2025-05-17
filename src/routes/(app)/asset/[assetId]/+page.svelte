@@ -1,6 +1,6 @@
 <script lang="ts">
     import NestedItems from "$components/NestedItems.svelte";
-    import IdCell from "$components/table/IdCell.svelte";
+    import IdCell from "$components/table/cell/IdCell.svelte";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";

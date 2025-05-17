@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/table-core";
 import { renderComponent } from "$lib/components/ui/data-table/index.js";
-import CheckboxCell from "$components/table/CheckboxCell.svelte";
-import IconCell from "$components/table/IconCell.svelte";
+import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
+import IconCell from "$components/table/cell/IconCell.svelte";
 import type { Filter, FilterOption } from "$components/table/data";
 import type { AssetType, Category } from "@prisma/client";
 import { categoriesToFilter } from "$lib/utils";
@@ -68,6 +68,7 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
             accessorKey: "value",
             header: "Value"
         },
+        // TODO: Finish asset instance list
         // {
         //     id: "assets",
         //     accessorKey: "assets",

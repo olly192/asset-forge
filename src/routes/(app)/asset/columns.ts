@@ -1,9 +1,9 @@
 import type { ColumnDef, Row } from "@tanstack/table-core";
 import { renderComponent } from "$lib/components/ui/data-table/index.js";
-import CheckboxCell from "$components/table/CheckboxCell.svelte";
-import IconCell from "$components/table/IconCell.svelte";
-import IdCell from "$components/table/IdCell.svelte";
-import TagsCell from "$components/table/TagsCell.svelte";
+import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
+import IconCell from "$components/table/cell/IconCell.svelte";
+import IdCell from "$components/table/cell/IdCell.svelte";
+import TagsCell from "$components/table/cell/TagsCell.svelte";
 import type { Filter, FilterOption } from "$components/table/data";
 import type { Asset, AssetType, Category, Location, Tag } from "@prisma/client";
 import { assetTypeToFilter, categoriesToFilter, locationsToFilter, tagsToFilter } from "$lib/utils";
@@ -11,7 +11,7 @@ import type { Component } from "svelte";
 import type { AssetWithTags } from "$lib/types";
 import { get, type Writable, writable } from "svelte/store";
 import { Archive, ArchiveX } from "lucide-svelte";
-import ButtonCell from "$components/table/ButtonCell.svelte"
+import ButtonCell from "$components/table/cell/ButtonCell.svelte"
 
 export type Data = {
     assets: AssetWithTags[];
