@@ -1,5 +1,4 @@
 <script lang="ts">
-    import NestedItems from "$components/NestedItems.svelte";
     import type { Filter } from "$components/table/data";
     import DataTable from "$components/table/DataTable.svelte";
     import { Label } from "$lib/components/ui/label";
@@ -7,39 +6,32 @@
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
-    import type { Asset, Location } from "@prisma/client";
+    import type { Asset, Tag } from "@prisma/client";
     import type { ColumnDef } from "@tanstack/table-core";
-    import { Pencil, RotateCw } from "lucide-svelte";
-    import { goto } from "$app/navigation";
-    import { nameToIcon } from "$lib/utils";
     import { onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import { type Data, generateTable } from "../../asset/columns";
     import RowActions from "../../asset/RowActions.svelte";
+    import { Circle, Pencil, RotateCw, Save } from "lucide-svelte";
+    import { Textarea } from "$lib/components/ui/textarea";
+    import { goto } from "$app/navigation";
 
-    $header = headerSnippet
+    $header = headerSnippet;
 
-    let pageData: { data: { location: Location, locations: Location[] } } = $props();
-    let { location, locations }: { location: Location, locations: Location[] } = pageData.data;
+    let pageData: { data: { tag: Tag, tags: Tag[] } } = $props();
+    let { tag, tags } = pageData.data;
 
     $breadcrumbs = [
-        { label: "Locations", href: "/location" },
-        { label: location.name },
-        { label: "Edit Location" }
+        { label: "Tags", href: "/tag" },
+        { label: tag.name },
+        { label: "Edit Tag" }
     ];
 
     let data: Writable<Data> = writable({ assets: [], categories: [], locations: [], tags: [], assetTypes: [] });
     let tableData: {
         data: Asset[], columns: ColumnDef<Asset>[], filters: Filter[]
     } = $state(generateTable(data, RowActions, refreshData));
-
-    let filterLocations: string[] = [];
-    function addChildLocations(location: Location) {
-        filterLocations.push(location.id);
-        locations.forEach((l: Location) => l.parentId === location.id && addChildLocations(l));
-    }
-    addChildLocations(location);
-    tableData.filters.find((f: Filter) => f.id === "location").default = filterLocations
+    tableData.filters.find((f: Filter) => f.id === "tags").default = [tag.id]
 
     let refreshing: boolean = $state(false);
     async function refreshData() {
@@ -47,23 +39,24 @@
         const resp = await fetch("/asset/get");
         data.set(await resp.json());
         tableData = generateTable(data, RowActions, refreshData);
+
         refreshing = false;
     }
     onMount(() => refreshData());
 </script>
 
 {#snippet headerSnippet()}
-    {@const Icon = nameToIcon(location.icon)}
     <div class="header">
         <h1 class="flex flex-row items-center gap-4">
-            <Icon class="size-8 stroke-{location.color ? location.color + '-500' : 'white'}" />
-            {location.name}
+            <Circle class="size-8 fill-{tag.color || 'neutral'}-500 stroke-{tag.color || 'neutral'}-700" />
+            {tag.name}
         </h1>
-        <Button onclick={() => goto(`/location/${location.id}/edit`)}>
-            <Pencil /> Edit Location
+        <Button onclick={() => goto(`/tag/${tag.id}/edit`)}>
+            <Pencil /> Edit Tag
         </Button>
     </div>
 {/snippet}
+
 
 <main class="w-full p-8 grid grid-cols-1 lg:grid-cols-[32rem_1fr] gap-8">
     <Card>
@@ -73,15 +66,12 @@
         <CardContent class="space-y-4">
             <div class="space-y-2">
                 <Label>Name</Label>
-                <Input value={location.name} readonly />
+                <Input value={tag.name} readonly />
             </div>
 
-            <div class="flex flex-col items-start gap-2">
-                <Label>Parent Locations</Label>
-                <NestedItems
-                    id={location.id} items={locations}
-                    url={id => `/location/${id}/edit`}
-                />
+            <div class="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={tag.description} placeholder="Tag Description" readonly />
             </div>
         </CardContent>
     </Card>

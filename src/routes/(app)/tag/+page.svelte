@@ -1,7 +1,7 @@
 <script lang="ts">
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button"
-    import { Plus, RotateCw, Trash, Archive, Pen, ArchiveRestore, Circle } from "lucide-svelte";
+    import { Plus, RotateCw, Trash, Archive, Pen, ArchiveRestore, Circle, Eye } from "lucide-svelte";
     import { goto } from "$app/navigation";
     import type { Tag } from "@prisma/client";
     import { onMount } from "svelte";
@@ -109,6 +109,10 @@
                 {tag.name}
             </div>
             <div>
+                <Button variant="ghost" size="icon-sm" onclick={() => goto(`/tag/${tag.id}`)}>
+                    <Eye class="size-4"/>
+                    <span class="sr-only">View Tag</span>
+                </Button>
                 <Button variant="ghost" size="icon-sm" onclick={() => goto(`/tag/${tag.id}/edit`)}>
                     <Pen class="size-4"/>
                     <span class="sr-only">Edit Tag</span>

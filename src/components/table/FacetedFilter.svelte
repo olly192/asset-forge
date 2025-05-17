@@ -61,7 +61,7 @@
                     {:else}
                         {#each filters as option}
                             <Badge variant="secondary" class="rounded-sm px-1 font-normal">
-                                {$options.filter(o => o.value === option)[0].label}
+                                {$options.filter(o => o.value === option)[0]?.label}
                             </Badge>
                         {/each}
                     {/if}
