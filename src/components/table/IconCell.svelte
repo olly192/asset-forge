@@ -22,7 +22,6 @@
         }
         return parentOptions;
     });
-
 </script>
 
 {#snippet renderIcon(IconElement: Component, option: FilterOption)}

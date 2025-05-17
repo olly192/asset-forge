@@ -1,7 +1,7 @@
 <script lang="ts">
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button"
-    import { Plus, RotateCw, Box, Trash, Archive, Pen, ArchiveRestore } from "lucide-svelte"
+    import { Plus, RotateCw, Box, Trash, Archive, Pen, ArchiveRestore, Eye } from "lucide-svelte";
     import { goto } from "$app/navigation"
     import type { TreeElement } from "$components/tree/tree"
     import TreeView from "$components/tree/TreeView.svelte"
@@ -94,6 +94,10 @@
 {/snippet}
 
 {#snippet treeActions({ id }: { id: string })}
+    <Button variant="ghost" size="icon-sm" onclick={() => goto(`/location/${id}`)}>
+        <Eye class="size-4"/>
+        <span class="sr-only">View Location</span>
+    </Button>
     <Button variant="ghost" size="icon-sm" onclick={() => goto(`/location/${id}/edit`)}>
         <Pen class="size-4"/>
         <span class="sr-only">Edit Location</span>

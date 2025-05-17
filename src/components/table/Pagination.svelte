@@ -18,7 +18,7 @@
         <div class="flex items-center space-x-2">
             <p class="text-sm font-medium">Rows per page</p>
             <Select type="single" bind:value={pageSize} onValueChange={() => table.setPageSize(Number(pageSize))}>
-                <SelectTrigger class="w-[180px]">
+                <SelectTrigger class="w-20">
                     {pageSize ?? "Select page size"}
                 </SelectTrigger>
                 <SelectContent>

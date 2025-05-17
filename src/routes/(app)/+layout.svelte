@@ -19,9 +19,9 @@
     </div>
 {/snippet}
 
-<SidebarProvider>
+<SidebarProvider class="overflow-x-hidden">
     <Sidebar />
-    <SidebarInset>
+    <SidebarInset class="overflow-x-hidden">
         <header>
             <div class="breadcrumb">
                 <SidebarTrigger class="-ml-1" />

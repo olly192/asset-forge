@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
         name: location.name,
         icon: location.icon,
         color: location.color,
-        parent: location.parentId
+        parent: location.parentId || undefined,
     };
 
     return { form };
