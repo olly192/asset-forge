@@ -3,7 +3,7 @@
     import { cn } from "$lib/utils";
     import { Check, Copy } from "lucide-svelte";
 
-    const { value, class: className }: { value: string, class: string } = $props();
+    const { value, class: className }: { value: string, class?: string } = $props();
 
     let copied = $state(false);
     function copyId() {

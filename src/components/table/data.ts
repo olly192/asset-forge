@@ -25,6 +25,7 @@ export type FilterOption = {
     icon?: any;
     color?: Color;
     url?: string;
+    parent?: FilterOption;
 }
 
 export type Filter = {
