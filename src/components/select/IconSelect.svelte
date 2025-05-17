@@ -24,8 +24,6 @@
     let filteredIcons = $derived(
         searchQuery.length >= 2 ? icons.filter(icon => icon.name.toLowerCase().includes(searchQuery.toLowerCase())) : []
     );
-    $inspect(searchQuery);
-    $inspect(filteredIcons.length);
 </script>
 
 <FormField {form} {name}>

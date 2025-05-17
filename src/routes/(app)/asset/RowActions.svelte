@@ -8,7 +8,7 @@
     import { goto } from "$app/navigation";
     import type { Writable } from "svelte/store";
     import type { Data } from "./columns";
-    import { cn, nameToIcon } from "$lib/utils";
+    import { nameToIcon } from "$lib/utils";
     import { toast } from "svelte-sonner";
     import type { AssetWithTags } from "$lib/types";
     import {

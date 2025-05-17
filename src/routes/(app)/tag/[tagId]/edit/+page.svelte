@@ -10,7 +10,7 @@
     import { Circle, Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { Textarea } from "$lib/components/ui/textarea";
-    import ColorSelect from "$components/ColorSelect.svelte";
+    import ColorSelect from "$components/select/ColorSelect.svelte";
     import { goto } from "$app/navigation";
 
     $header = headerSnippet;

@@ -12,7 +12,7 @@
     import { writable, type Writable } from "svelte/store";
     import { type Data, generateTable } from "../../asset/columns";
     import RowActions from "../../asset/RowActions.svelte";
-    import { Circle, Pencil, RotateCw, Save } from "lucide-svelte";
+    import { Circle, Pencil, RotateCw } from "lucide-svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { goto } from "$app/navigation";
 

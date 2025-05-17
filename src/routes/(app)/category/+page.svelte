@@ -75,7 +75,6 @@
     }
 
     onMount(() => refreshData());
-    $inspect(tree);
 </script>
 
 {#snippet headerSnippet()}

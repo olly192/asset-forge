@@ -1,15 +1,17 @@
+import { icons } from "$components/icons";
 import { type ClassValue, clsx } from "clsx";
 import type { Component } from "svelte";
 import { twMerge } from "tailwind-merge";
 import type { AssetType, Category, Location, Tag } from "@prisma/client";
 import type { Color, FilterOption } from "$components/table/data";
-import * as icons from "lucide-svelte";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const nameToIcon: (name: string) => Component = (name: string) => icons[name] as Component;
+export function nameToIcon(name: string): Component | undefined {
+	return icons.find((icon: { name: string, component: Component }) => icon.name === name)?.component;
+}
 
 export function categoriesToFilter(categories: Category[]): FilterOption[] {
 	if (!categories) return [];

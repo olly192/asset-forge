@@ -1,10 +1,10 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import AssetTypeSelect from "$components/AssetTypeSelect.svelte";
-    import LocationSelect from "$components/LocationSelect.svelte";
+    import AssetTypeSelect from "$components/select/AssetTypeSelect.svelte";
+    import LocationSelect from "$components/select/LocationSelect.svelte";
     import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/IdCell.svelte";
-    import TagSelect from "$components/TagSelect.svelte";
+    import TagSelect from "$components/select/TagSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
     import { Label } from "$lib/components/ui/label";
     import { breadcrumbs, header } from "$lib/stores";
@@ -47,8 +47,6 @@
     });
 
     $header = headerSnippet;
-
-    $inspect("tags", $formData.tags)
 </script>
 
 {#snippet headerSnippet()}

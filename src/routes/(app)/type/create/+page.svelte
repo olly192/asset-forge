@@ -10,7 +10,7 @@
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { goto } from "$app/navigation";
-    import CategorySelect from "$components/CategorySelect.svelte";
+    import CategorySelect from "$components/select/CategorySelect.svelte";
 
     $breadcrumbs = [
         { label: "Asset Types", href: "/type" },

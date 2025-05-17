@@ -75,7 +75,6 @@
     }
 
     onMount(() => refreshData());
-    $inspect(tree);
 </script>
 
 {#snippet headerSnippet()}
@@ -93,7 +92,7 @@
     </div>
 {/snippet}
 
-{#snippet treeActions({ id }: { id: string })}
+{#snippet treeActions({ id })}
     <Button variant="ghost" size="icon-sm" onclick={() => goto(`/location/${id}`)}>
         <Eye class="size-4"/>
         <span class="sr-only">View Location</span>

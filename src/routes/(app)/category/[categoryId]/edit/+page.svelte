@@ -10,10 +10,10 @@
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { Textarea } from "$lib/components/ui/textarea";
-    import ColorSelect from "$components/ColorSelect.svelte";
-    import IconSelect from "$components/IconSelect.svelte";
+    import ColorSelect from "$components/select/ColorSelect.svelte";
+    import IconSelect from "$components/select/IconSelect.svelte";
     import { goto } from "$app/navigation";
-    import CategorySelect from "$components/CategorySelect.svelte";
+    import CategorySelect from "$components/select/CategorySelect.svelte";
     import { page } from "$app/state";
     import { nameToIcon } from "$lib/utils";
 

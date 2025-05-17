@@ -9,10 +9,10 @@
     import { locationSchema, type LocationSchema } from "../../schema";
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
-    import ColorSelect from "$components/ColorSelect.svelte";
-    import IconSelect from "$components/IconSelect.svelte";
+    import ColorSelect from "$components/select/ColorSelect.svelte";
+    import IconSelect from "$components/select/IconSelect.svelte";
     import { goto } from "$app/navigation";
-    import LocationSelect from "$components/LocationSelect.svelte";
+    import LocationSelect from "$components/select/LocationSelect.svelte";
     import { page } from "$app/state";
     import { nameToIcon } from "$lib/utils";
 

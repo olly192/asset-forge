@@ -1,6 +1,7 @@
 import * as iconComponents from "lucide-svelte";
+import type { Component } from "svelte";
 
-export const icons: { name: string, component: any }[] = [
+export const icons: { name: string, component: Component }[] = [
     { name: "AArrowDown", component: iconComponents.AArrowDown },
     { name: "AArrowUp", component: iconComponents.AArrowUp },
     { name: "ALargeSmall", component: iconComponents.ALargeSmall },
