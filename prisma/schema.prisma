@@ -73,38 +73,39 @@ model Verification {
 }
 
 model Asset {
-  id           String             @id @default(uuid())
+  id           String                  @id @default(uuid())
   assetId      String
-  type         AssetType          @relation(fields: [typeId], references: [id])
+  type         AssetType               @relation(fields: [typeId], references: [id])
   typeId       String
   notes        String?
   tags         Tag[]
-  location     Location?          @relation(fields: [locationId], references: [id])
+  location     Location?               @relation(fields: [locationId], references: [id])
   locationId   String?
-  customFields CustomFieldValue[]
-  archived     Boolean            @default(false)
+  customFields CustomFieldAssetValue[]
+  archived     Boolean                 @default(false)
   deleted      DateTime?
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
 
   @@map("asset")
 }
 
 model AssetType {
-  id          String    @id @default(uuid())
-  name        String
-  displayName String?
-  description String?
-  brand       String?
-  value       Float?
-  image       String?
-  assets      Asset[]
-  category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  archived    Boolean   @default(false)
-  deleted     DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String                 @id @default(uuid())
+  name         String
+  displayName  String?
+  description  String?
+  brand        String?
+  value        Float?
+  image        String?
+  assets       Asset[]
+  category     Category?              @relation(fields: [categoryId], references: [id])
+  categoryId   String?
+  customFields CustomFieldTypeValue[]
+  archived     Boolean                @default(false)
+  deleted      DateTime?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 
   @@map("asset_type")
 }
@@ -158,7 +159,7 @@ model Location {
   @@map("location")
 }
 
-model CustomFieldValue {
+model CustomFieldAssetValue {
   id            String      @id @default(uuid())
   asset         Asset       @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId       String
@@ -167,17 +168,28 @@ model CustomFieldValue {
   value         Json
 }
 
+model CustomFieldTypeValue {
+  id            String      @id @default(uuid())
+  assetType     AssetType   @relation(fields: [assetTypeId], references: [id], onDelete: Cascade)
+  assetTypeId   String
+  customField   CustomField @relation(fields: [customFieldId], references: [id], onDelete: Cascade)
+  customFieldId String
+  value         Json
+}
+
 model CustomField {
-  id               String             @id @default(uuid())
-  name             String
-  type             String
-  description      String?
-  options          Json?
-  archived         Boolean            @default(false)
-  deleted          DateTime?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  CustomFieldValue CustomFieldValue[]
+  id          String                  @id @default(uuid())
+  name        String
+  type        String
+  description String?
+  options     Json?
+  perInstance Boolean                 @default(false)
+  assetValues CustomFieldAssetValue[]
+  typeValues  CustomFieldTypeValue[]
+  archived    Boolean                 @default(false)
+  deleted     DateTime?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
 
   @@map("custom_field")
 }
