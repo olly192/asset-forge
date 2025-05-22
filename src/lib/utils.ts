@@ -69,3 +69,14 @@ export function assetTypeToFilter(types: AssetType[]): FilterOption[] {
 		url: `/type/${type.id}/edit`
 	}))
 }
+
+export function assetTypeToBrandFilter(types: AssetType[]): FilterOption[] {
+	if (!types) return [];
+	let brands: FilterOption[] = [{ value: "", label: "None" }];
+	types.forEach((type: AssetType) => {
+		if (type.brand && !brands.find((brand: FilterOption) => brand.value === type.brand)) {
+			brands.push({ value: type.brand, label: type.brand });
+		}
+	})
+	return brands;
+}

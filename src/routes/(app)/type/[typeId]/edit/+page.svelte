@@ -2,21 +2,19 @@
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
-    import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
-    import { Input } from "$lib/components/ui/input";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
+    import AssetTypeForm from "../../AssetTypeForm.svelte";
     import { assetTypeSchema, type AssetTypeSchema } from "../../schema";
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { goto } from "$app/navigation";
-    import CategorySelect from "$components/select/CategorySelect.svelte";
 
     $header = headerSnippet;
 
     let { data }: { data: { form: SuperValidated<Infer<AssetTypeSchema>> } } = $props();
 
-    const form = superForm(data.form, {
+    let form = superForm(data.form, {
         validators: valibotClient(assetTypeSchema),
         onUpdated: ({ form }) => {
             if (form.valid) {
@@ -26,7 +24,7 @@
         }
     });
 
-    const { form: formData, enhance, allErrors } = form;
+    const { form: formData, allErrors } = form;
 
     $breadcrumbs = [
         { label: "Asset Types", href: "/type" },
@@ -52,19 +50,7 @@
             <CardTitle>Edit Asset Type</CardTitle>
         </CardHeader>
         <CardContent>
-            <form method="POST" use:enhance>
-                <FormField {form} name="name">
-                    <FormControl>
-                        {#snippet children({ props })}
-                            <FormLabel>Name</FormLabel>
-                            <Input {...props} bind:value={$formData.name} placeholder="Type Name" />
-                        {/snippet}
-                    </FormControl>
-                    <FormFieldErrors />
-                </FormField>
-
-                <CategorySelect {form} name="category" label="Category" bind:value={$formData.category} allowNone />
-            </form>
+            <AssetTypeForm bind:form />
         </CardContent>
     </Card>
 </main>

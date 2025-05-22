@@ -22,6 +22,10 @@ export const load: PageServerLoad = async ({ request, params }) => {
     const form = await superValidate(valibot(assetTypeSchema));
     form.data = {
         name: assetType.name,
+        displayName: assetType.displayName || undefined,
+        description: assetType.description || undefined,
+        brand: assetType.brand || undefined,
+        value: assetType.value || undefined,
         category: assetType?.categoryId || undefined
     };
 
@@ -48,6 +52,10 @@ export const actions: Actions = {
             where: { id: typeId },
             data: {
                 name: form.data.name,
+                displayName: form.data.displayName,
+                description: form.data.description,
+                brand: form.data.brand,
+                value: form.data.value,
                 category: form.data.category ? { connect: { id: form.data.category } } : { disconnect: true }
             }
         })

@@ -25,6 +25,10 @@ export const actions: Actions = {
         await prisma.assetType.create({
             data: {
                 name: form.data.name,
+                displayName: form.data.displayName,
+                description: form.data.description,
+                brand: form.data.brand,
+                value: form.data.value,
                 category: form.data.category ? { connect: { id: form.data.category } } : undefined
             }
         })

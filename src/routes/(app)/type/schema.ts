@@ -7,7 +7,10 @@ export const assetTypeSchema = v.object({
         v.minLength(2, "Name must be at least 2 characters"),
         v.maxLength(64, "Name cannot be longer than 64 characters"),
     ),
+    displayName: v.optional(v.string()),
     description: v.optional(v.string()),
+    brand: v.optional(v.string()),
+    value: v.optional(v.number()),
     category: v.optional(v.string())
 });
 
