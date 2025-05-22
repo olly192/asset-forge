@@ -7,7 +7,9 @@
     import { tick } from "svelte"
     import { cn } from "$lib/utils"
 
-    let { form, name, value = $bindable(), label } = $props();
+    let { form, name, value = $bindable(), label, trigger } = $props();
+
+    if (!trigger) trigger = defaultTrigger
 
     const colors: { name: string; value: string }[] = [
         { name: "Red", value: "red" },
@@ -40,48 +42,72 @@
     }
 </script>
 
-<FormField {form} {name}>
-    <Popover bind:open>
-        <FormControl>
-            {#snippet children({ props })}
-                <FormLabel>{label}</FormLabel>
-                <PopoverTrigger bind:ref={triggerRef}>
-                    {#snippet child({ props })}
-                        <Button variant="outline" class="w-full justify-between px-3" {...props} role="combobox">
-                            <div class="flex flex-row items-center gap-2">
-                                <Circle class="fill-{value || 'neutral'}-500 stroke-{value || 'neutral'}-700 size-4" />
-                                {#if selectedValue}
-                                    <span>{selectedValue}</span>
-                                {:else}
-                                    <span class="opacity-60">Select a color</span>
-                                {/if}
+{#snippet defaultTrigger(value, name, props)}
+    <Button variant="outline" class="w-full justify-between px-3" {...props} role="combobox">
+        <div class="flex flex-row items-center gap-2">
+            <Circle class="fill-{value || 'neutral'}-500 stroke-{value || 'neutral'}-700 size-4" />
+            {#if label}
+                <span>{name}</span>
+            {:else}
+                <span class="opacity-60">Select a color</span>
+            {/if}
+        </div>
+        <ChevronDown class="size-4 shrink-0 opacity-30" />
+    </Button>
+{/snippet}
+
+{#snippet popoverContent()}
+    <PopoverContent class="w-full p-0" align="start">
+        <Command class="w-full">
+            <CommandInput placeholder="Search colors..." />
+            <CommandList>
+                <CommandEmpty>No color found.</CommandEmpty>
+                <CommandGroup>
+                    {#each colors as color}
+                        <CommandItem onSelect={() => selectColor(color)} class="justify-between">
+                            <div class="flex flex-row gap-2">
+                                <Circle class="fill-{color.value}-500 stroke-{color.value}-700 size-4" />
+                                {color.name}
                             </div>
-                            <ChevronDown class="size-4 shrink-0 opacity-30" />
-                        </Button>
-                    {/snippet}
-                </PopoverTrigger>
-                <input hidden bind:value {name} />
-                <PopoverContent class="w-full p-0" align="start">
-                    <Command class="w-full">
-                        <CommandInput placeholder="Search colors..." />
-                        <CommandList>
-                            <CommandEmpty>No color found.</CommandEmpty>
-                            <CommandGroup>
-                                {#each colors as color}
-                                    <CommandItem onSelect={() => selectColor(color)} class="justify-between">
-                                        <div class="flex flex-row gap-2">
-                                            <Circle class="fill-{color.value}-500 stroke-{color.value}-700 size-4" />
-                                            {color.name}
-                                        </div>
-                                        <Check class={cn("size-4", value !== color.value && "text-transparent")} />
-                                    </CommandItem>
-                                {/each}
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
+                            <Check class={cn("size-4", value !== color.value && "text-transparent")} />
+                        </CommandItem>
+                    {/each}
+                </CommandGroup>
+            </CommandList>
+        </Command>
+    </PopoverContent>
+{/snippet}
+
+{#if form && name}
+    <FormField {form} {name}>
+        <Popover bind:open>
+            <FormControl>
+                {#snippet children({ props })}
+                    {#if label}
+                        <FormLabel>{label}</FormLabel>
+                    {/if}
+                    <PopoverTrigger bind:ref={triggerRef}>
+                        {#snippet child({ props })}
+                            {@render trigger(value, selectedValue, props)}
+                        {/snippet}
+                    </PopoverTrigger>
+                    <input hidden bind:value {name} />
+                    {@render popoverContent()}
+                {/snippet}
+            </FormControl>
+        </Popover>
+        <FormFieldErrors />
+    </FormField>
+{:else}
+    <Popover bind:open>
+        {#if label}
+            <FormLabel>{label}</FormLabel>
+        {/if}
+        <PopoverTrigger bind:ref={triggerRef}>
+            {#snippet child({ props })}
+                {@render trigger(value, selectedValue, props)}
             {/snippet}
-        </FormControl>
+        </PopoverTrigger>
+        {@render popoverContent()}
     </Popover>
-    <FormFieldErrors />
-</FormField>
+{/if}

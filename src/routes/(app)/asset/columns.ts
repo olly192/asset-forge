@@ -4,13 +4,12 @@ import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
 import IconCell from "$components/table/cell/IconCell.svelte";
 import IdCell from "$components/table/cell/IdCell.svelte";
 import TagsCell from "$components/table/cell/TagsCell.svelte";
-import type { Filter, FilterOption } from "$components/table/data";
+import { archivedFilter, type Filter, type FilterOption } from "$components/table/data";
 import type { Asset, AssetType, Category, Location, Tag } from "@prisma/client";
 import { assetTypeToFilter, categoriesToFilter, locationsToFilter, tagsToFilter } from "$lib/utils";
 import type { Component } from "svelte";
 import type { AssetWithTags } from "$lib/types";
 import { get, type Writable, writable } from "svelte/store";
-import { Archive, ArchiveX } from "lucide-svelte";
 import ButtonCell from "$components/table/cell/ButtonCell.svelte"
 
 export type Data = {
@@ -27,10 +26,6 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
     const locationOptions: Writable<FilterOption[]> = writable(locationsToFilter(locations));
     const tagOptions: Writable<FilterOption[]> = writable(tagsToFilter(tags));
     const typeOptions: Writable<FilterOption[]> = writable(assetTypeToFilter(assetTypes));
-    const archivedFilter: Writable<FilterOption[]> = writable([
-        { value: "true", label: "True", icon: Archive, color: "red" },
-        { value: "false", label: "False", icon: ArchiveX, color: "green" }
-    ])
     data.subscribe(() => {
         tagOptions.set(tagsToFilter(get(data).tags));
         categoryOptions.set(categoriesToFilter(get(data).categories));

@@ -1,4 +1,5 @@
-import type { Writable } from "svelte/store";
+import { Archive, ArchiveX } from "lucide-svelte";
+import { writable, type Writable } from "svelte/store";
 
 export const labels = [
     {
@@ -19,6 +20,11 @@ export const labels = [
 export type Color = "red" | "orange" | "amber" | "yellow" | "lime" | "green" | "emerald" | "teal" | "cyan" | "sky"
     | "blue" | "indigo" | "violet" | "purple" | "fuchsia" | "pink" | "rose";
 
+export const colors: Color[] = [
+    "red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky",
+    "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose"
+];
+
 export type FilterOption = {
     value: string;
     label: string;
@@ -34,3 +40,8 @@ export type Filter = {
     options: Writable<FilterOption[]>;
     default?: string[];
 }
+
+export const archivedFilter: Writable<FilterOption[]> = writable([
+    { value: "true", label: "True", icon: Archive, color: "red" },
+    { value: "false", label: "False", icon: ArchiveX, color: "green" }
+])

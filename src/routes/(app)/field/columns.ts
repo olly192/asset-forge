@@ -1,34 +1,27 @@
+import SetIconCell from "$components/table/cell/SetIconCell.svelte";
 import type { ColumnDef, Row } from "@tanstack/table-core";
 import { renderComponent } from "$lib/components/ui/data-table/index.js";
 import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
-import IconCell from "$components/table/cell/IconCell.svelte";
 import { archivedFilter, type Filter, type FilterOption } from "$components/table/data";
-import type { AssetType, Category } from "@prisma/client";
-import { assetTypeToBrandFilter, categoriesToFilter } from "$lib/utils";
+import type { CustomField } from "@prisma/client";
 import type { Component } from "svelte";
 import { get, type Writable, writable } from "svelte/store";
+import { HelpCircle } from "lucide-svelte";
+import { fieldTypes } from "./schema";
 
 export type Data = {
-    assetTypes: AssetType[];
-    categories: Category[];
+    customFields: CustomField[];
 };
 
 export function generateTable(data: Writable<Data>, actionsComponent: Component<any>, refreshData: Function) {
-    const { assetTypes, categories } = get(data);
-    const categoryOptions: Writable<FilterOption[]> = writable(categoriesToFilter(categories));
-    const assetTypeFilter: Writable<FilterOption[]> = writable(assetTypeToBrandFilter(assetTypes));
-    data.subscribe(() => {
-        categoryOptions.set(categoriesToFilter(get(data).categories));
-        assetTypeFilter.set(assetTypeToBrandFilter(get(data).assetTypes));
-    });
+    const { customFields } = get(data);
 
     const filters: Filter[] = [
-        { id: "category", label: "Category", options: categoryOptions },
-        { id: "archived", label: "Archived", options: archivedFilter, default: ["false"] },
-        { id: "brand", label: "Brand", options: assetTypeFilter }
-    ]
+        { id: "type", label: "Field Type", options: writable(fieldTypes) },
+        { id: "archived", label: "Archived", options: archivedFilter, default: ["false"] }
+    ];
 
-    const columns: ColumnDef<AssetType>[] = [
+    const columns: ColumnDef<CustomField>[] = [
         {
             id: "select",
             header: ({ table }) => {
@@ -52,46 +45,33 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
         {
             id: "name",
             accessorKey: "name",
-            header: "Name",
-            cell: ({ row }) => row.original.displayName || row.original.name
+            header: "Name"
         },
         {
-            id: "brand",
-            accessorKey: "brand",
-            header: "Brand",
-            filterFn: (row: Row<AssetType>, _: string, value: string[]): boolean => {
-                return value.length === 0 || (
-                    row.original.brand === null ? value.includes("") : value.includes(row.original.brand)
-                );
-            }
-        },
-        {
-            id: "category",
-            accessorKey: "categoryId",
-            header: "Category",
+            id: "type",
+            accessorKey: "type",
+            header: "Type",
             cell: ({ row }) => {
-                return renderComponent(IconCell, { value: row.original.categoryId, options: categoryOptions });
+                let option: FilterOption = fieldTypes.find(
+                    (option: FilterOption) => option.value === row.original.type
+                ) || { value: "", label: "Unknown", icon: HelpCircle, color: "orange" };
+                return renderComponent(SetIconCell, { option });
             },
-            filterFn: "arrIncludesSome"
-        },
-        {
-            id: "value",
-            accessorKey: "value",
-            header: "Value",
-            cell: ({ row }) => {
-                return row.original.value && `£${row.original.value.toFixed(2)}`;
+            filterFn: (row: Row<CustomField>, _: string, value: string[]): boolean => {
+                return value.length === 0 || value.includes(row.original.type);
             }
         },
-        // TODO: Finish asset instance list
-        // {
-        //     id: "assets",
-        //     accessorKey: "assets",
-        //     header: "Assets",
-        //     cell: ({ row }) => {
-        //         return renderComponent(IconCell, { value: row.original.locationId, options: locationOptions });
-        //     },
-        //     filterFn: "arrIncludesSome"
-        // },
+        {
+            id: "perInstance",
+            accessorKey: "perInstance",
+            header: "Per Instance",
+            cell: ({ row }) => {
+                return renderComponent(CheckboxCell, { checked: row.original.perInstance, disabled: true });
+            },
+            filterFn: (row, _, filterValue) => {
+                return filterValue.length === 0 || filterValue.includes(row.original.perInstance.toString())
+            }
+        },
         {
             id: "archived",
             accessorKey: "archived",
@@ -113,5 +93,5 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
         }
     ];
 
-    return { columns, filters, data: assetTypes };
+    return { columns, filters, data: customFields };
 }
