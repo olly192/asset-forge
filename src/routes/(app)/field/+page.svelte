@@ -4,7 +4,7 @@
     import { Plus, RotateCw } from "lucide-svelte";
     import DataTable from "$components/table/DataTable.svelte";
     import { goto } from "$app/navigation";
-    import { type Data, generateTable } from "./columns.js";
+    import { type Data, type FullCustomField, generateTable } from "./columns.js";
     import RowActions from "./RowActions.svelte";
     import type { CustomField } from "@prisma/client";
     import type { ColumnDef } from "@tanstack/table-core";
@@ -15,9 +15,9 @@
     $breadcrumbs = [{ label: "Custom Fields", href: "/field" }];
     $header = headerSnippet;
 
-    let data: Writable<Data> = writable({ customFields: [] });
+    let data: Writable<Data> = writable({ customFields: [], categories: [], tags: [] });
     let tableData: {
-        data: CustomField[], columns: ColumnDef<CustomField>[], filters: Filter[]
+        data: CustomField[], columns: ColumnDef<FullCustomField>[], filters: Filter[]
     } = $state(generateTable(data, RowActions, refreshData));
 
     let refreshing: boolean = $state(false);

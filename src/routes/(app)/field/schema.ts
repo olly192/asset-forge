@@ -6,8 +6,8 @@ export const fieldTypes: FilterOption[] = [
     { value: "string", label: "String", icon: TextCursorInput, color: "red" },
     { value: "number", label: "Number", icon: Hash, color: "blue" },
     { value: "boolean", label: "Boolean", icon: ToggleRight, color: "green" },
-    { value: "date", label: "Date", icon: Calendar, color: "purple" },
-    { value: "select", label: "Select", icon: ChevronDown, color: "pink" },
+    { value: "date", label: "Date", icon: Calendar, color: "cyan" },
+    { value: "select", label: "Select", icon: ChevronDown, color: "purple" },
     { value: "textarea", label: "Textarea", icon: Text, color: "yellow" }
 ];
 
@@ -64,7 +64,9 @@ export const customFieldSchema = v.object({
             default: v.optional(v.string())
         })
     ]),
-    perInstance: v.optional(v.boolean())
+    perInstance: v.optional(v.boolean()),
+    categoryLimit: v.optional(v.string()),
+    tagLimit: v.optional(v.array(v.string()))
 });
 
 export type CustomFieldSchema = typeof customFieldSchema;

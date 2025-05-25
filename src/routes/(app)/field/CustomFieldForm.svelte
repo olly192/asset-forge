@@ -1,6 +1,8 @@
 <script lang="ts">
     import DatePicker from "$components/DatePicker.svelte";
+    import CategorySelect from "$components/select/CategorySelect.svelte";
     import FieldTypeSelect from "$components/select/FieldTypeSelect.svelte";
+    import TagSelect from "$components/select/TagSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
     import { Input } from "$lib/components/ui/input";
     import { Switch } from "$lib/components/ui/switch";
@@ -152,15 +154,6 @@
             </FormField>
 
             <SelectCreator bind:value={$formData.options.options} />
-            <!-- <FormField {form} name="options.default"> -->
-            <!--     <FormControl> -->
-            <!--         {#snippet children({ props })} -->
-            <!--             <FormLabel>Default Value</FormLabel> -->
-            <!--             <Input {...props} bind:value={$formData.options.default} placeholder="No default" /> -->
-            <!--         {/snippet} -->
-            <!--     </FormControl> -->
-            <!--     <FormFieldErrors /> -->
-            <!-- </FormField> -->
         </div>
 
     {:else if $formData.options.type === "textarea"}
@@ -202,6 +195,11 @@
         </FormControl>
         <FormFieldErrors />
     </FormField>
+
+    <CategorySelect
+        {form} name="categoryLimit" label="Limit to Category" bind:value={$formData.categoryLimit} allowNone
+    />
+    <TagSelect {form} name="tagLimit" label="Limit to Tags" bind:value={$formData.tagLimit} />
 </form>
 
 <style lang="postcss">

@@ -1,3 +1,4 @@
+import type { FullCustomField } from "../../columns";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
@@ -5,7 +6,7 @@ import { valibot } from "sveltekit-superforms/adapters";
 import { customFieldSchema } from "../../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { CustomField } from "@prisma/client";
+import type { CustomField, Tag } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -14,8 +15,12 @@ export const load: PageServerLoad = async ({ request, params }) => {
     const { fieldId } = params;
     if (!fieldId) return fail(400, { message: "Custom field ID is required" });
 
-    const customField: CustomField | null = await prisma.customField.findUnique({
-        where: { id: fieldId, deleted: null }
+    const customField: FullCustomField | null = await prisma.customField.findUnique({
+        where: { id: fieldId, deleted: null },
+        include: {
+            tagLimit: true,
+            categoryLimit: true
+        }
     });
     if (!customField) return fail(404, { message: "Custom field not found" });
 
@@ -25,7 +30,9 @@ export const load: PageServerLoad = async ({ request, params }) => {
         type: customField.type,
         description: customField.description || undefined,
         options: { type: customField.type, ...customField.options },
-        perInstance: customField.perInstance
+        perInstance: customField.perInstance,
+        categoryLimit: customField.categoryLimit?.id || undefined,
+        tagLimit: customField.tagLimit.map((tag: Tag) => tag.id) || []
     };
 
     return { form };
@@ -54,7 +61,11 @@ export const actions: Actions = {
                 type: form.data.options.type,
                 description: form.data.description,
                 options: form.data.options,
-                perInstance: form.data.perInstance
+                perInstance: form.data.perInstance,
+                categoryLimit: (
+                    form.data.categoryLimit ? { connect: { id: form.data.categoryLimit } } : { disconnect: true }
+                ),
+                tagLimit: { set: form.data.tagLimit ? form.data.tagLimit.map((id: string) => ({ id })) : [] }
             }
         })
 

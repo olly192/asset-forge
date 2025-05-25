@@ -30,7 +30,11 @@ export const actions: Actions = {
                 type: form.data.options.type,
                 description: form.data.description,
                 options: form.data.options,
-                perInstance: form.data.perInstance
+                perInstance: form.data.perInstance,
+                categoryLimit: (
+                    form.data.categoryLimit ? { connect: { id: form.data.categoryLimit } } : { disconnect: true }
+                ),
+                tagLimit: { set: form.data.tagLimit ? form.data.tagLimit.map((id: string) => ({ id })) : [] }
             }
         })
 

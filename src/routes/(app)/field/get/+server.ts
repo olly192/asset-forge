@@ -1,15 +1,24 @@
 import { prisma } from '$lib/prisma';
 import { auth } from '$lib/auth';
+import type { Category, Tag } from "@prisma/client";
 import { error, json } from "@sveltejs/kit"
+import type { FullCustomField } from "../columns";
 
 export async function GET({ request }) {
     const session = await auth.api.getSession(request);
     if (!session?.user) return error(403, "Unauthorized");
 
-    const customFields = await prisma.customField.findMany({
+    const customFields: FullCustomField[] = await prisma.customField.findMany({
         orderBy: { name: "asc" },
-        where: { deleted: null }
+        where: { deleted: null },
+        include: {
+            tagLimit: true,
+            categoryLimit: true
+        }
     });
 
-    return json({ customFields });
+    const categories: Category[] = await prisma.category.findMany({ where: { deleted: null } });
+    const tags: Tag[] = await prisma.tag.findMany({ where: { deleted: null } });
+
+    return json({ customFields, categories, tags });
 }

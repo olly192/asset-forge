@@ -111,33 +111,35 @@ model AssetType {
 }
 
 model Category {
-  id          String      @id @default(uuid())
-  name        String
-  description String?
-  icon        String
-  color       String
-  assetTypes  AssetType[]
-  chilren     Category[]  @relation("Categories")
-  parent      Category?   @relation("Categories", fields: [parentId], references: [id])
-  parentId    String?
-  archived    Boolean     @default(false)
-  deleted     DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id           String        @id @default(uuid())
+  name         String
+  description  String?
+  icon         String
+  color        String
+  assetTypes   AssetType[]
+  chilren      Category[]    @relation("Categories")
+  parent       Category?     @relation("Categories", fields: [parentId], references: [id])
+  parentId     String?
+  customFields CustomField[]
+  archived     Boolean       @default(false)
+  deleted      DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("category")
 }
 
 model Tag {
-  id          String    @id @default(uuid())
-  name        String
-  description String?
-  color       String
-  assets      Asset[]
-  archived    Boolean   @default(false)
-  deleted     DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String        @id @default(uuid())
+  name         String
+  description  String?
+  color        String
+  assets       Asset[]
+  customFields CustomField[]
+  archived     Boolean       @default(false)
+  deleted      DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("tag")
 }
@@ -178,18 +180,21 @@ model CustomFieldTypeValue {
 }
 
 model CustomField {
-  id          String                  @id @default(uuid())
-  name        String
-  type        String
-  description String?
-  options     Json?
-  perInstance Boolean                 @default(false)
-  assetValues CustomFieldAssetValue[]
-  typeValues  CustomFieldTypeValue[]
-  archived    Boolean                 @default(false)
-  deleted     DateTime?
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @updatedAt
+  id              String                  @id @default(uuid())
+  name            String
+  type            String
+  description     String?
+  options         Json?
+  perInstance     Boolean                 @default(false)
+  assetValues     CustomFieldAssetValue[]
+  typeValues      CustomFieldTypeValue[]
+  categoryLimit   Category?               @relation(fields: [categoryLimitId], references: [id])
+  categoryLimitId String?
+  tagLimit        Tag[]
+  archived        Boolean                 @default(false)
+  deleted         DateTime?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
 
   @@map("custom_field")
 }
