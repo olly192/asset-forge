@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types.js";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 
-export const load: PageServerLoad = async ({ request, params }) => {
+export const load: PageServerLoad = async ({ request }) => {
     const session = await auth.api.getSession(request);
     if (!session?.user) return;
 

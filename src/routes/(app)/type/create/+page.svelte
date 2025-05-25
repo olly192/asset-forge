@@ -4,8 +4,9 @@
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
+    import type { FullCustomField } from "../../field/columns";
     import AssetTypeForm from "../AssetTypeForm.svelte";
-    import { assetTypeSchema, type AssetTypeSchema } from "../schema";
+    import { type AssetTypeSchema, assetTypeSchema } from "../schema";
     import { Save } from "lucide-svelte";
     import { toast } from "svelte-sonner";
     import { goto } from "$app/navigation";
@@ -16,10 +17,13 @@
     ];
     $header = headerSnippet
 
-    let { data }: { data: { form: SuperValidated<Infer<AssetTypeSchema>> } } = $props();
+    let { data }: {
+        data: { form: SuperValidated<Infer<AssetTypeSchema>>, customFields: FullCustomField[] }
+    } = $props();
 
     let form = superForm(data.form, {
-        validators: valibotClient(assetTypeSchema),
+        validators: valibotClient(assetTypeSchema(data.customFields)),
+        dataType: "json",
         onUpdated: ({ form }) => {
             if (form.valid) {
                 goto("/type");

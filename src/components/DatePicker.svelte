@@ -6,15 +6,15 @@
     import { buttonVariants } from "$lib/components/ui/button/index.js";
     import { Calendar } from "$lib/components/ui/calendar/index.js";
 
-    let { placeholder, value = $bindable() }: { placeholder?: string, value: Date | undefined } = $props();
+    let { placeholder, value = $bindable() }: { placeholder?: string, value: string | undefined } = $props();
     if (!placeholder) placeholder = "Pick a date";
 
     const df = new DateFormatter("en-GB", { dateStyle: "long" });
 
     let contentRef = $state<HTMLElement | null>(null);
 
-    let calendarValue: DateValue | undefined = $state(value ? parseAbsoluteToLocal(value.toString()) : undefined);
-    $effect(() => value = calendarValue?.toDate())
+    let calendarValue: DateValue | undefined = $state(value ? parseAbsoluteToLocal(value) : undefined);
+    $effect(() => value = calendarValue?.toDate().toISOString());
 </script>
 
 <Popover>

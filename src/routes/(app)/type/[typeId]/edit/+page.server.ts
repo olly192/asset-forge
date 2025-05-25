@@ -1,11 +1,12 @@
+import type { FullCustomField } from "../../../field/columns";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
-import { superValidate } from "sveltekit-superforms";
+import { superValidate, type SuperValidated } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
 import { assetTypeSchema } from "../../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { AssetType } from "@prisma/client";
+import type { AssetType, CustomFieldTypeValue } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -19,17 +20,31 @@ export const load: PageServerLoad = async ({ request, params }) => {
     });
     if (!assetType) return fail(404, { message: "Asset type not found" });
 
-    const form = await superValidate(valibot(assetTypeSchema));
+    const customFields: FullCustomField[] = await prisma.customField.findMany({
+        where: { deleted: null, archived: false, perInstance: false },
+        orderBy: { name: "asc" },
+        include: { tagLimit: true, categoryLimit: true }
+    })
+
+    const form: SuperValidated<any> = await superValidate(valibot(assetTypeSchema(customFields)));
     form.data = {
         name: assetType.name,
         displayName: assetType.displayName || undefined,
         description: assetType.description || undefined,
         brand: assetType.brand || undefined,
         value: assetType.value || undefined,
-        category: assetType?.categoryId || undefined
+        category: assetType?.categoryId || undefined,
+        customFields: Object.fromEntries(
+            customFields.map((field: FullCustomField) => [field.id, (field.options as { default: any })?.default])
+        )
     };
 
-    return { form };
+    const customFieldValues: CustomFieldTypeValue[] = await prisma.customFieldTypeValue.findMany({
+        where: { assetTypeId: typeId }
+    })
+    customFieldValues.forEach((data: CustomFieldTypeValue) => form.data.customFields[data.customFieldId] = data.value);
+
+    return { form, customFields };
 };
 
 export const actions: Actions = {
@@ -37,7 +52,13 @@ export const actions: Actions = {
         const session = await auth.api.getSession(event.request);
         if (!session?.user) return;
 
-        const form = await superValidate(event, valibot(assetTypeSchema));
+        const customFields: FullCustomField[] = await prisma.customField.findMany({
+            where: { deleted: null, archived: false, perInstance: false },
+            orderBy: { name: "asc" },
+            include: { tagLimit: true, categoryLimit: true }
+        })
+
+        const form: SuperValidated<any> = await superValidate(event, valibot(assetTypeSchema(customFields)));
         if (!form.valid) return fail(400, { form });
 
         const { typeId } = event.params;
@@ -59,6 +80,21 @@ export const actions: Actions = {
                 category: form.data.category ? { connect: { id: form.data.category } } : { disconnect: true }
             }
         })
+
+        for (const [fieldId, value] of Object.entries(form.data.customFields)) {
+            const emptyVal: any = customFields.find((field: FullCustomField) => field.id === fieldId)?.options?.default;
+            if (value !== emptyVal) {
+                await prisma.customFieldTypeValue.upsert({
+                    where: { id: { customFieldId: fieldId, assetTypeId: typeId } },
+                    create: { customFieldId: fieldId, assetTypeId: typeId, value },
+                    update: { value }
+                });
+            } else {
+                await prisma.customFieldTypeValue.deleteMany({
+                    where: { customFieldId: fieldId, assetTypeId: typeId }
+                });
+            }
+        }
 
         return { form };
     }

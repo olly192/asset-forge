@@ -162,21 +162,23 @@ model Location {
 }
 
 model CustomFieldAssetValue {
-  id            String      @id @default(uuid())
   asset         Asset       @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId       String
   customField   CustomField @relation(fields: [customFieldId], references: [id], onDelete: Cascade)
   customFieldId String
   value         Json
+
+  @@id(name: "id", [assetId, customFieldId])
 }
 
 model CustomFieldTypeValue {
-  id            String      @id @default(uuid())
   assetType     AssetType   @relation(fields: [assetTypeId], references: [id], onDelete: Cascade)
   assetTypeId   String
   customField   CustomField @relation(fields: [customFieldId], references: [id], onDelete: Cascade)
   customFieldId String
   value         Json
+
+  @@id(name: "id", [assetTypeId, customFieldId])
 }
 
 model CustomField {
