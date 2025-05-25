@@ -1,6 +1,7 @@
 <script lang="ts">
     import DatePicker from "$components/DatePicker.svelte";
     import CategorySelect from "$components/select/CategorySelect.svelte";
+    import CustomFieldSelect from "$components/select/CustomFieldSelect.svelte";
     import FieldTypeSelect from "$components/select/FieldTypeSelect.svelte";
     import TagSelect from "$components/select/TagSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
@@ -154,6 +155,10 @@
             </FormField>
 
             <SelectCreator bind:value={$formData.options.options} />
+
+            <CustomFieldSelect {form} name="options.default" label="Default Value"
+                bind:value={$formData.options.default} options={$formData.options.options} allowNone
+            />
         </div>
 
     {:else if $formData.options.type === "textarea"}

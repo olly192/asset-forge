@@ -9,7 +9,9 @@
     import { cn } from "$lib/utils"
     import type { Tag } from "@prisma/client";
 
-    let { form, name, value = $bindable([]), label, exclude } = $props();
+    let { form, name, value = $bindable(), label, exclude } = $props();
+
+    if (value === undefined) value = [];
 
     let tags: Tag[] = $state([]);
 

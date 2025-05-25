@@ -31,10 +31,8 @@ export const actions: Actions = {
                 description: form.data.description,
                 options: form.data.options,
                 perInstance: form.data.perInstance,
-                categoryLimit: (
-                    form.data.categoryLimit ? { connect: { id: form.data.categoryLimit } } : { disconnect: true }
-                ),
-                tagLimit: { set: form.data.tagLimit ? form.data.tagLimit.map((id: string) => ({ id })) : [] }
+                categoryLimit: form.data.categoryLimit ? { connect: { id: form.data.categoryLimit } } : undefined,
+                tagLimit: form.data.tagLimit ? { connect: form.data.tagLimit.map((id: string) => ({ id }))} : undefined
             }
         })
 

@@ -18,12 +18,13 @@
         const resp = await fetch("/category/get");
         const newData: { categories: Category[] } = await resp.json();
         categories = newData.categories.filter(c => c.id !== exclude);
-        if (allowNone) categories.push({
+        if (allowNone) categories = [{
             id: undefined,
             name: "None",
             icon: "circle",
-            color: "neutral"
-        })
+            color: "neutral",
+            parentId: null
+        }, ...categories ];
         refreshing = false;
     }
     onMount(() => refreshData());

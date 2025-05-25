@@ -1,17 +1,20 @@
 <script lang="ts">
     import { Popover, PopoverContent, PopoverTrigger } from "$lib/components/ui/popover";
     import { CalendarIcon } from "lucide-svelte";
-    import { DateFormatter, type DateValue, getLocalTimeZone } from "@internationalized/date";
+    import { DateFormatter, type DateValue, getLocalTimeZone, parseAbsoluteToLocal } from "@internationalized/date";
     import { cn } from "$lib/utils.js";
     import { buttonVariants } from "$lib/components/ui/button/index.js";
     import { Calendar } from "$lib/components/ui/calendar/index.js";
 
-    let { placeholder, value = $bindable() }: { placeholder?: string, value: DateValue | undefined } = $props();
+    let { placeholder, value = $bindable() }: { placeholder?: string, value: Date | undefined } = $props();
     if (!placeholder) placeholder = "Pick a date";
 
     const df = new DateFormatter("en-GB", { dateStyle: "long" });
 
     let contentRef = $state<HTMLElement | null>(null);
+
+    let calendarValue: DateValue | undefined = $state(value ? parseAbsoluteToLocal(value.toString()) : undefined);
+    $effect(() => value = calendarValue?.toDate())
 </script>
 
 <Popover>
@@ -20,9 +23,9 @@
         !value && "text-muted-foreground"
     )}>
         <CalendarIcon />
-        {value ? df.format(value.toDate(getLocalTimeZone())) : placeholder}
+        {calendarValue ? df.format(calendarValue.toDate(getLocalTimeZone())) : placeholder}
     </PopoverTrigger>
     <PopoverContent bind:ref={contentRef} class="w-auto p-0">
-        <Calendar type="single" bind:value />
+        <Calendar type="single" bind:value={calendarValue} />
     </PopoverContent>
 </Popover>
