@@ -1,7 +1,6 @@
 <script lang="ts">
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
-    import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
     import type { FullCustomField } from "../../field/columns";
@@ -44,20 +43,5 @@
     </div>
 {/snippet}
 
-<main>
-    <Card>
-        <CardHeader>
-            <CardTitle>New Asset Type</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <AssetTypeForm bind:form />
-        </CardContent>
-    </Card>
-</main>
+<AssetTypeForm bind:form />
 
-
-<style lang="postcss">
-    main {
-        @apply w-full max-w-lg m-8;
-    }
-</style>
