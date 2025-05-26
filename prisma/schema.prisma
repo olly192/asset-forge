@@ -97,7 +97,7 @@ model AssetType {
   description  String?
   brand        String?
   value        Float?
-  image        String?
+  images       String[]
   assets       Asset[]
   category     Category?              @relation(fields: [categoryId], references: [id])
   categoryId   String?

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ImageGallery from "$components/ImageGallery.svelte";
     import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/cell/IdCell.svelte";
     import { breadcrumbs, header } from "$lib/stores";
@@ -92,6 +93,7 @@
             </div>
         </CardContent>
     </Card>
+
     <Card>
         <CardHeader>
             <CardTitle>Asset Type</CardTitle>
@@ -121,6 +123,15 @@
                     </Button>
                 {/if}
             </div>
+        </CardContent>
+    </Card>
+
+    <Card>
+        <CardHeader>
+            <CardTitle>Images</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-2">
+            <ImageGallery value={asset.type.images} />
         </CardContent>
     </Card>
 </main>

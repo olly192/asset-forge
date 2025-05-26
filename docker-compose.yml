@@ -19,7 +19,7 @@ services:
       - "9001:9001"
     command: server /data --console-address ":9001"
     volumes:
-      - ./data/minio:/data
+      - ../data/minio:/data
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
@@ -33,6 +33,6 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=asset_forge
     volumes:
-      - ./data/postgresql:/var/lib/postgresql/data:Z
+      - ../data/postgresql:/var/lib/postgresql/data:Z
     ports:
       - "5432:5432"

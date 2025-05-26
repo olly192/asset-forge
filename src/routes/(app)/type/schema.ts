@@ -27,7 +27,8 @@ export const assetTypeSchema = (customFields: FullCustomField[]) => {
         brand: v.optional(v.string()),
         value: v.optional(v.number()),
         category: v.optional(v.string()),
-        customFields: v.object(mappedCustomFields)
+        customFields: v.object(mappedCustomFields),
+        images: v.optional(v.array(v.string()))
     });
 }
 

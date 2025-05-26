@@ -50,6 +50,7 @@ export const actions: Actions = {
                 brand: form.data.brand,
                 value: form.data.value,
                 category: form.data.category ? { connect: { id: form.data.category } } : undefined,
+                images: { set: form.data.images ? form.data.images : [] }
             }
         })
 

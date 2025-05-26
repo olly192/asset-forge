@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from "$app/state";
     import DatePicker from "$components/DatePicker.svelte";
+    import ImageUploader from "$components/ImageUploader.svelte";
     import CategorySelect from "$components/select/CategorySelect.svelte";
     import CustomFieldSelect from "$components/select/CustomFieldSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
@@ -172,6 +173,8 @@
             {/each}
         </CardContent>
     </Card>
+
+    <ImageUploader bind:value={$formData.images} />
 </form>
 
 <style lang="postcss">

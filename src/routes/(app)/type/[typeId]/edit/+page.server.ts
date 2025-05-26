@@ -34,6 +34,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
         brand: assetType.brand || undefined,
         value: assetType.value || undefined,
         category: assetType?.categoryId || undefined,
+        images: assetType.images || [],
         customFields: Object.fromEntries(
             customFields.map((field: FullCustomField) => [field.id, (field.options as { default: any })?.default])
         )
@@ -77,7 +78,8 @@ export const actions: Actions = {
                 description: form.data.description,
                 brand: form.data.brand,
                 value: form.data.value,
-                category: form.data.category ? { connect: { id: form.data.category } } : { disconnect: true }
+                category: form.data.category ? { connect: { id: form.data.category } } : { disconnect: true },
+                images: { set: form.data.images ? form.data.images : [] }
             }
         })
 

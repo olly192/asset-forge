@@ -9,7 +9,7 @@
     import { Switch } from "$lib/components/ui/switch";
     import { Textarea } from "$lib/components/ui/textarea";
     import type { Infer, SuperForm } from "sveltekit-superforms";
-    import SelectCreator from "../../../SelectCreator.svelte";
+    import SelectCreator from "$components/SelectCreator.svelte";
     import { type CustomFieldSchema } from "./schema";
 
     let { form = $bindable() }: { form: SuperForm<Infer<CustomFieldSchema>> } = $props();
