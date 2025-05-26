@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
         description: category.description || "",
         icon: category.icon,
         color: category.color,
-        parent: category.parentId
+        parent: category.parentId || undefined
     };
 
     return { form };

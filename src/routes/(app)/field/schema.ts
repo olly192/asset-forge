@@ -11,6 +11,8 @@ export const fieldTypes: FilterOption[] = [
     { value: "textarea", label: "Textarea", icon: Text, color: "yellow" }
 ];
 
+export type FieldTypeKey = (typeof fieldTypes)[number]["value"];
+
 export const customFieldSchema = v.object({
     name: v.pipe(
         v.string("Name is required"),

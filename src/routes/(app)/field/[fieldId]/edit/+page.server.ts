@@ -3,7 +3,7 @@ import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
-import { customFieldSchema } from "../../schema";
+import { customFieldSchema, type FieldTypeKey } from "../../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { CustomField, Tag } from "@prisma/client";
@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
         name: customField.name,
         type: customField.type,
         description: customField.description || undefined,
-        options: { type: customField.type, ...customField.options },
+        options: { type: (customField.type as FieldTypeKey), ...(customField.options as object) },
         perInstance: customField.perInstance,
         categoryLimit: customField.categoryLimit?.id || undefined,
         tagLimit: customField.tagLimit.map((tag: Tag) => tag.id) || []
