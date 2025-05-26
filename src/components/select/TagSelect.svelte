@@ -8,8 +8,11 @@
     import { onMount, tick } from "svelte"
     import { cn } from "$lib/utils"
     import type { Tag } from "@prisma/client";
+    import type { SuperForm } from "sveltekit-superforms";
 
-    let { form, name, value = $bindable(), label, exclude } = $props();
+    let { form, name, value = $bindable(), label, exclude }: {
+        form: SuperForm<any>, name: string, value: string, label: string, exclude?: string
+    } = $props();
 
     if (value === undefined) value = [];
 

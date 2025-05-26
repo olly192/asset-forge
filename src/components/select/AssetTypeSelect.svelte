@@ -7,8 +7,11 @@
     import { onMount, tick } from "svelte"
     import { cn, nameToIcon } from "$lib/utils"
     import type { AssetType, Category } from "@prisma/client";
+    import type { SuperForm } from "sveltekit-superforms";
 
-    let { form, name, value = $bindable(), label, exclude } = $props();
+    let { form, name, value = $bindable(), label, exclude }: {
+        form: SuperForm<any>, name: string, value: string, label: string, exclude?: string
+    } = $props();
 
     let assetTypes: AssetType[] = $state([]);
     let categories: Category[] = $state([]);
@@ -18,7 +21,7 @@
         refreshing = true;
         const resp = await fetch("/type/get");
         const newData: { assetTypes: AssetType[], categories: Category[] } = await resp.json();
-        assetTypes = newData.assetTypes.filter(c => c.id !== exclude);
+        assetTypes = newData.assetTypes.filter(t => t.id !== exclude);
         categories = newData.categories;
         refreshing = false;
     }

@@ -15,7 +15,7 @@
 
     let { form = $bindable() }: { form: SuperForm<Infer<AssetTypeSchema>> } = $props();
 
-    const { form: formData, enhance, allErrors } = form;
+    const { form: formData, enhance } = form;
 
     let customFields = $derived(page.data.customFields.filter((field: FullCustomField) => {
         return !field.categoryLimit || $formData.category === field.categoryLimit.id

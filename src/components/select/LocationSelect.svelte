@@ -7,8 +7,11 @@
     import { onMount, tick } from "svelte"
     import { cn, nameToIcon } from "$lib/utils"
     import type { Location } from "@prisma/client"
+    import type { SuperForm } from "sveltekit-superforms";
 
-    let { form, name, value = $bindable(), label, exclude } = $props();
+    let { form, name, value = $bindable(), label, exclude }: {
+        form: SuperForm<any>, name: string, value: string, label: string, exclude?: string
+    } = $props();
 
     let locations: Location[] = $state([]);
 
@@ -17,14 +20,14 @@
         refreshing = true;
         const resp = await fetch("/location/get");
         const newData: { locations: Location[] } = await resp.json();
-        locations = newData.locations.filter(c => c.id !== exclude);
+        locations = newData.locations.filter(l => l.id !== exclude);
         refreshing = false;
     }
     onMount(() => refreshData());
 
     let open = $state(false);
     let triggerRef = $state<HTMLButtonElement>(null!);
-    const selectedLocation = $derived(locations.find(c => c.id === value));
+    const selectedLocation = $derived(locations.find(l => l.id === value));
 
     function selectLocation(location: Location) {
         value = location.id
