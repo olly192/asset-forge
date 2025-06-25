@@ -1,4 +1,5 @@
 <script lang="ts">
+    import CustomFields from "$components/CustomFields.svelte";
     import ImageGallery from "$components/ImageGallery.svelte";
     import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/cell/IdCell.svelte";
@@ -96,6 +97,24 @@
 
     <Card>
         <CardHeader>
+            <CardTitle>Custom Fields</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <!-- <CustomFields {form} readonly /> -->
+        </CardContent>
+    </Card>
+
+    <Card>
+        <CardHeader>
+            <CardTitle>Images</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-2">
+            <ImageGallery value={asset.type.images} />
+        </CardContent>
+    </Card>
+
+    <Card>
+        <CardHeader>
             <CardTitle>Asset Type</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2">
@@ -123,15 +142,6 @@
                     </Button>
                 {/if}
             </div>
-        </CardContent>
-    </Card>
-
-    <Card>
-        <CardHeader>
-            <CardTitle>Images</CardTitle>
-        </CardHeader>
-        <CardContent class="space-y-2">
-            <ImageGallery value={asset.type.images} />
         </CardContent>
     </Card>
 </main>

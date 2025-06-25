@@ -1,5 +1,5 @@
+import type { FullCustomField } from "$lib/types";
 import type { AssetType } from "@prisma/client";
-import type { FullCustomField } from "../../field/columns";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";

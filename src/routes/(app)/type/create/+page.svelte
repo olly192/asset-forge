@@ -1,9 +1,9 @@
 <script lang="ts">
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
+    import type { FullCustomField } from "$lib/types";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
-    import type { FullCustomField } from "../../field/columns";
     import AssetTypeForm from "../AssetTypeForm.svelte";
     import { type AssetTypeSchema, assetTypeSchema } from "../schema";
     import { Save } from "lucide-svelte";

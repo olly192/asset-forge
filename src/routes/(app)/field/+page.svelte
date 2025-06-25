@@ -1,10 +1,11 @@
 <script lang="ts">
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/form";
+    import type { FullCustomField } from "$lib/types";
     import { Plus, RotateCw } from "lucide-svelte";
     import DataTable from "$components/table/DataTable.svelte";
     import { goto } from "$app/navigation";
-    import { type Data, type FullCustomField, generateTable } from "./columns.js";
+    import { type Data, generateTable } from "./columns.js";
     import RowActions from "./RowActions.svelte";
     import type { CustomField } from "@prisma/client";
     import type { ColumnDef } from "@tanstack/table-core";

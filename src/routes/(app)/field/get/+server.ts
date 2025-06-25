@@ -1,8 +1,8 @@
 import { prisma } from '$lib/prisma';
 import { auth } from '$lib/auth';
+import type { FullCustomField } from "$lib/types";
 import type { Category, Tag } from "@prisma/client";
 import { error, json } from "@sveltejs/kit"
-import type { FullCustomField } from "../columns";
 
 export async function GET({ request }) {
     const session = await auth.api.getSession(request);

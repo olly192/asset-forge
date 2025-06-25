@@ -1,17 +1,9 @@
+import type { FullCustomField } from "$lib/types";
+import { typeMap } from "$lib/utils";
 import type { OptionalSchema } from "valibot";
 import * as v from "valibot";
-import type { FullCustomField } from "../field/columns";
 
-const typeMap: Record<string, OptionalSchema<any, any>> = {
-    string: v.optional(v.string()),
-    number: v.optional(v.number()),
-    boolean: v.optional(v.boolean()),
-    date: v.optional(v.pipe(v.string(), v.isoTimestamp())),
-    select: v.optional(v.pipe(v.string(), v.uuid())),
-    textarea: v.optional(v.string())
-}
-
-export const assetTypeSchema = (customFields: FullCustomField[]) => {
+export function assetTypeSchema(customFields: FullCustomField[]) {
     const mappedCustomFields: Record<string, OptionalSchema<any, any>> = {};
     customFields.forEach((field: FullCustomField) => mappedCustomFields[field.id] = typeMap[field.type]);
 

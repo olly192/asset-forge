@@ -24,7 +24,7 @@
             children: [
                 { title: "General", url: "/settings" },
                 { title: "Users", url: "/settings/users" },
-                { title: "Custom Fields", url: "/settings/fields" },
+                { title: "Custom Fields", url: "/field" },
                 { title: "Authentication", url: "/settings/auth" }
             ]
         }

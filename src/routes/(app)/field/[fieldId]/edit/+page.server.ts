@@ -1,4 +1,4 @@
-import type { FullCustomField } from "../../columns";
+import type { FullCustomField } from "$lib/types";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";

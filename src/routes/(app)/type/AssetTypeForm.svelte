@@ -1,25 +1,17 @@
 <script lang="ts">
-    import { page } from "$app/state";
-    import DatePicker from "$components/DatePicker.svelte";
+    import CustomFields from "$components/CustomFields.svelte";
     import ImageUploader from "$components/ImageUploader.svelte";
     import CategorySelect from "$components/select/CategorySelect.svelte";
-    import CustomFieldSelect from "$components/select/CustomFieldSelect.svelte";
     import { FormControl, FormField, FormFieldErrors, FormLabel } from "$lib/components/ui/form";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
-    import { Switch } from "$lib/components/ui/switch";
     import { Textarea } from "$lib/components/ui/textarea";
     import type { Infer, SuperForm } from "sveltekit-superforms";
-    import type { FullCustomField } from "../field/columns";
     import type { AssetTypeSchema } from "./schema";
 
     let { form = $bindable() }: { form: SuperForm<Infer<AssetTypeSchema>> } = $props();
 
     const { form: formData, enhance } = form;
-
-    let customFields = $derived(page.data.customFields.filter((field: FullCustomField) => {
-        return !field.categoryLimit || $formData.category === field.categoryLimit.id
-    }));
 </script>
 
 <form method="POST" use:enhance>
@@ -90,87 +82,7 @@
             <CardTitle>Custom Fields</CardTitle>
         </CardHeader>
         <CardContent>
-            {#each customFields as field}
-                {#if field.type === "string"}
-                    <FormField {form} name={field.id}>
-                        <FormControl>
-                            {#snippet children({ props })}
-                                <FormLabel>{field.name}</FormLabel>
-                                <Input
-                                    {...props} bind:value={$formData.customFields[field.id]}
-                                    placeholder={field.options.placeholder || ""}
-                                />
-                            {/snippet}
-                        </FormControl>
-                        <FormFieldErrors />
-                    </FormField>
-
-                {:else if field.type === "number"}
-                    <FormField {form} name={field.id}>
-                        <FormControl>
-                            {#snippet children({ props })}
-                                <FormLabel>{field.name}</FormLabel>
-                                <Input
-                                    {...props} bind:value={$formData.customFields[field.id]} type="number"
-                                    step={field.options.step} placeholder={field.options.placeholder || ""}
-                                />
-                            {/snippet}
-                        </FormControl>
-                        <FormFieldErrors />
-                    </FormField>
-
-                {:else if field.type === "boolean"}
-                    <FormField {form} name={field.id}>
-                        <FormControl>
-                            {#snippet children({ props })}
-                                <div class="flex flex-row items-center gap-4 mt-2">
-                                    <FormLabel>{field.name}</FormLabel>
-                                    {#if $formData.customFields[field.id] !== undefined}
-                                        <Switch {...props} bind:checked={$formData.customFields[field.id]} />
-                                    {/if}
-                                </div>
-                            {/snippet}
-                        </FormControl>
-                        <FormFieldErrors />
-                    </FormField>
-
-                {:else if field.type === "date"}
-                    <FormField {form} name={field.id}>
-                        <FormControl>
-                            {#snippet children({ props })}
-                                <div class="flex flex-col gap-2">
-                                    <FormLabel>{field.name}</FormLabel>
-                                    <DatePicker
-                                        {...props} bind:value={$formData.customFields[field.id]}
-                                        placeholder={field.options.placeholder || ""}
-                                    />
-                                </div>
-                            {/snippet}
-                        </FormControl>
-                        <FormFieldErrors />
-                    </FormField>
-
-                {:else if field.type === "select"}
-                    <CustomFieldSelect
-                        {form} name={field.id} label={field.name} options={field.options.options} allowNone
-                        bind:value={$formData.customFields[field.id]}
-                    />
-
-                {:else if field.type === "textarea"}
-                    <FormField {form} name={field.id}>
-                        <FormControl>
-                            {#snippet children({ props })}
-                                <FormLabel>{field.name}</FormLabel>
-                                <Textarea
-                                    {...props} bind:value={$formData.customFields[field.id]}
-                                    placeholder={field.options.placeholder || ""}
-                                />
-                            {/snippet}
-                        </FormControl>
-                        <FormFieldErrors />
-                    </FormField>
-                {/if}
-            {/each}
+            <CustomFields {form} bind:category={$formData.category} />
         </CardContent>
     </Card>
 

@@ -1,18 +1,17 @@
+import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
 import IconCell from "$components/table/cell/IconCell.svelte";
 import SetIconCell from "$components/table/cell/SetIconCell.svelte";
 import TagsCell from "$components/table/cell/TagsCell.svelte";
-import { categoriesToFilter, tagsToFilter } from "$lib/utils";
-import type { ColumnDef, Row } from "@tanstack/table-core";
-import { renderComponent } from "$lib/components/ui/data-table/index.js";
-import CheckboxCell from "$components/table/cell/CheckboxCell.svelte";
 import { archivedFilter, type Filter, type FilterOption } from "$components/table/data";
-import type { Category, Prisma, Tag } from "@prisma/client";
+import { renderComponent } from "$lib/components/ui/data-table/index.js";
+import type { FullCustomField } from "$lib/types";
+import { categoriesToFilter, tagsToFilter } from "$lib/utils";
+import type { Category, Tag } from "@prisma/client";
+import type { ColumnDef, Row } from "@tanstack/table-core";
+import { HelpCircle, Package, PencilRuler } from "lucide-svelte";
 import type { Component } from "svelte";
 import { get, type Writable, writable } from "svelte/store";
-import { HelpCircle, Package, PencilRuler } from "lucide-svelte";
 import { fieldTypes } from "./schema";
-
-export type FullCustomField = Prisma.CustomFieldGetPayload<{ include: { tagLimit: true, categoryLimit: true } }>;
 
 export type Data = {
     customFields: FullCustomField[];

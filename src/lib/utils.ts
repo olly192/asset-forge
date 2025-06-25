@@ -1,9 +1,11 @@
 import { icons } from "$components/icons";
+import type { Color, FilterOption } from "$components/table/data";
+import type { AssetType, Category, Location, Tag } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import type { Component } from "svelte";
 import { twMerge } from "tailwind-merge";
-import type { AssetType, Category, Location, Tag } from "@prisma/client";
-import type { Color, FilterOption } from "$components/table/data";
+import * as v from "valibot";
+import { type OptionalSchema } from "valibot";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -80,3 +82,12 @@ export function assetTypeToBrandFilter(types: AssetType[]): FilterOption[] {
 	})
 	return brands;
 }
+
+export const typeMap: Record<string, OptionalSchema<any, any>> = {
+	string: v.optional(v.string()),
+	number: v.optional(v.number()),
+	boolean: v.optional(v.boolean()),
+	date: v.optional(v.pipe(v.string(), v.isoTimestamp())),
+	select: v.optional(v.pipe(v.string(), v.uuid())),
+	textarea: v.optional(v.string())
+};

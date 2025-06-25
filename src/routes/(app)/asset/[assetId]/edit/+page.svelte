@@ -3,6 +3,7 @@
     import IdCell from "$components/table/cell/IdCell.svelte";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
+    import type { FullCustomField } from "$lib/types";
     import type { AssetType, Category } from "@prisma/client";
     import { Save } from "lucide-svelte";
     import { goto } from "$app/navigation";
@@ -13,11 +14,16 @@
     import { assetSchema, type AssetSchema } from "../../schema";
 
     let { data }: {
-        data: { form: SuperValidated<Infer<AssetSchema>>, assetTypes: AssetType[], categories: Category[] }
+        data: {
+            form: SuperValidated<Infer<AssetSchema>>,
+            customFields: FullCustomField[]
+            assetTypes: AssetType[],
+            categories: Category[]
+        }
     } = $props();
 
     let form = superForm(data.form, {
-        validators: valibotClient(assetSchema),
+        validators: valibotClient(assetSchema(data.customFields, data.typeCustomFields)),
         dataType: "json",
         onUpdated: ({ form }) => {
             if (form.valid) {
