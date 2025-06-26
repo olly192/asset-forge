@@ -5,7 +5,6 @@
         SidebarMenuSubItem
     } from "$lib/components/ui/sidebar";
     import { Boxes, Package, ScanSearch, Settings, Tag, ChevronRight, ChartPie, Map, PencilRuler } from "lucide-svelte";
-    import { goto } from "$app/navigation";
 
     const nav = [
         { title: "Dashboard", url: "/", icon: ChartPie },
@@ -57,7 +56,7 @@
                                 <SidebarMenuSub>
                                     {#each item.children as childItem (childItem.title)}
                                         <SidebarMenuSubItem>
-                                            <SidebarMenuSubButton onclick={() => goto(childItem.url)}>
+                                            <SidebarMenuSubButton href={childItem.url}>
                                                 {childItem.title}
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
@@ -69,12 +68,16 @@
                 </Collapsible>
             {:else}
                 <SidebarMenuItem>
-                    <SidebarMenuButton onclick={() => goto(item.url)}>
+                    <SidebarMenuButton>
                         {#snippet tooltipContent()}
                             {item.title}
                         {/snippet}
-                        <Icon />
-                        <span>{item.title}</span>
+                        {#snippet child({ props })}
+                            <a href={item.url} {...props}>
+                                <Icon />
+                                <span>{item.title}</span>
+                            </a>
+                        {/snippet}
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             {/if}

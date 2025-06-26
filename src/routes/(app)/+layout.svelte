@@ -6,7 +6,6 @@
     } from "$lib/components/ui/breadcrumb";
     import { SidebarProvider, SidebarInset, SidebarTrigger } from "$lib/components/ui/sidebar";
     import { breadcrumbs, header } from "$lib/stores";
-    import { goto } from "$app/navigation"
 
     let { children } = $props();
     $breadcrumbs = [];
@@ -30,22 +29,22 @@
                     <BreadcrumbList>
                         {#each $breadcrumbs as breadcrumb, index}
                             {#if index === $breadcrumbs.length - 1}
-                                <BreadcrumbItem class="hidden md:block">
+                                <BreadcrumbItem>
                                     {breadcrumb.label}
                                 </BreadcrumbItem>
                             {:else}
-                                <BreadcrumbItem class="hidden md:block">
+                                <BreadcrumbItem>
                                     {#if breadcrumb.href}
-                                        <BreadcrumbLink onclick={() => goto(breadcrumb.href)} class="cursor-pointer">
-                                            {breadcrumb.label}
+                                        <BreadcrumbLink>
+                                            <a href={breadcrumb.href}>{breadcrumb.label}</a>
                                         </BreadcrumbLink>
                                     {:else}
-                                        <BreadcrumbItem class="hidden md:block">
+                                        <BreadcrumbItem>
                                             {breadcrumb.label}
                                         </BreadcrumbItem>
                                     {/if}
                                 </BreadcrumbItem>
-                                <BreadcrumbSeparator class="hidden md:block" />
+                                <BreadcrumbSeparator />
                             {/if}
                         {/each}
                     </BreadcrumbList>
