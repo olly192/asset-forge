@@ -33,7 +33,7 @@
         }
     });
 
-    const { form: formData, enhance, allErrors } = form;
+    const { form: formData, allErrors } = form;
     let assetType = $derived(data.assetTypes?.find(t => t.id === $formData.type));
 
     $effect(() => {
@@ -53,11 +53,9 @@
             <span>{assetType?.name}</span>
             <IdCell bind:value={$formData.assetId} class="bg-muted/50 p-1 pl-3 rounded-lg text-xl font-medium" />
         </h1>
-        <div>
-            <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
-                <Save /> Save
-            </Button>
-        </div>
+        <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
+            <Save /> Save
+        </Button>
     </div>
 {/snippet}
 

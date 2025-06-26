@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Color } from "$components/table/data";
+    import { Label } from "$lib/components/ui/label";
     import { tick } from "svelte";
     import type { SuperForm } from "sveltekit-superforms";
     import { cn, nameToIcon } from "$lib/utils.js";
@@ -12,7 +13,7 @@
     import { Button } from "$lib/components/ui/button/index.js";
 
     let { form, name, value = $bindable(), label, options, allowNone = false, readonly = false }: {
-        form: SuperForm<any>,
+        form?: SuperForm<any>,
         name: string,
         value?: string,
         label?: string,
@@ -55,54 +56,61 @@
     </Button>
 {/snippet}
 
-<FormField {form} {name}>
-    {#if readonly}
-        <FormControl>
-            <FormLabel>{label}</FormLabel>
-            {@render trigger()}
-        </FormControl>
-    {:else}
-        <Popover bind:open>
+{#if form}
+    <FormField {form} {name}>
+        {#if readonly}
             <FormControl>
-                {#snippet children({ props })}
-                    <FormLabel>{label}</FormLabel>
-                    <PopoverTrigger bind:ref={triggerRef}>
-                        {#snippet child({ props })}
-                            {@render trigger(props)}
-                        {/snippet}
-                    </PopoverTrigger>
-                    <input hidden bind:value name={name} />
-                    <PopoverContent class="w-full min-w-64 p-0" align="start">
-                        <Command class="w-full">
-                            <CommandInput placeholder="Search options..." />
-                            <CommandList>
-                                <CommandEmpty>No options found.</CommandEmpty>
-                                <CommandGroup>
-                                    {#if allowNone}
-                                        <CommandItem onSelect={() => select(undefined)} class="justify-between">
-                                            <div class="flex flex-row gap-2">
-                                                None
-                                            </div>
-                                            <Check class={cn("size-4", value !== undefined && "text-transparent")} />
-                                        </CommandItem>
-                                    {/if}
-                                    {#each options as option}
-                                        {@const Icon = nameToIcon(option.icon)}
-                                        <CommandItem onSelect={() => select(option.value)} class="justify-between">
-                                            <div class="flex flex-row gap-2">
-                                                <Icon class="stroke-{option.color}-500 size-4" />
-                                                {option.label}
-                                            </div>
-                                            <Check class={cn("size-4", value !== option.value && "text-transparent")} />
-                                        </CommandItem>
-                                    {/each}
-                                </CommandGroup>
-                            </CommandList>
-                        </Command>
-                    </PopoverContent>
-                {/snippet}
+                <FormLabel>{label}</FormLabel>
+                {@render trigger()}
             </FormControl>
-        </Popover>
-    {/if}
-    <FormFieldErrors />
-</FormField>
+        {:else}
+            <Popover bind:open>
+                <FormControl>
+                    {#snippet children({ props })}
+                        <FormLabel>{label}</FormLabel>
+                        <PopoverTrigger bind:ref={triggerRef}>
+                            {#snippet child({ props })}
+                                {@render trigger(props)}
+                            {/snippet}
+                        </PopoverTrigger>
+                        <input hidden bind:value name={name} />
+                        <PopoverContent class="w-full min-w-64 p-0" align="start">
+                            <Command class="w-full">
+                                <CommandInput placeholder="Search options..." />
+                                <CommandList>
+                                    <CommandEmpty>No options found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {#if allowNone}
+                                            <CommandItem onSelect={() => select(undefined)} class="justify-between">
+                                                <div class="flex flex-row gap-2">
+                                                    None
+                                                </div>
+                                                <Check class={cn("size-4", value !== undefined && "text-transparent")} />
+                                            </CommandItem>
+                                        {/if}
+                                        {#each options as option}
+                                            {@const Icon = nameToIcon(option.icon)}
+                                            <CommandItem onSelect={() => select(option.value)} class="justify-between">
+                                                <div class="flex flex-row gap-2">
+                                                    <Icon class="stroke-{option.color}-500 size-4" />
+                                                    {option.label}
+                                                </div>
+                                                <Check class={cn("size-4", value !== option.value && "text-transparent")} />
+                                            </CommandItem>
+                                        {/each}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    {/snippet}
+                </FormControl>
+            </Popover>
+        {/if}
+        <FormFieldErrors />
+    </FormField>
+{:else}
+    <div class="space-y-2 my-2">
+        <Label>{label}</Label>
+        {@render trigger()}
+    </div>
+{/if}

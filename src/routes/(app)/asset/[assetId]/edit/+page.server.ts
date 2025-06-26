@@ -6,7 +6,7 @@ import { valibot } from "sveltekit-superforms/adapters";
 import { assetSchema } from "../../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { Asset, AssetType, Category, CustomFieldAssetValue, CustomFieldTypeValue } from "@prisma/client";
+import type { Asset, AssetType, Category, CustomFieldAssetValue } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ request, params }) => {
     const session = await auth.api.getSession(request);
@@ -52,15 +52,6 @@ export const load: PageServerLoad = async ({ request, params }) => {
         where: { assetId }
     })
     customFieldValues.forEach((data: CustomFieldAssetValue) => form.data.customFields[data.customFieldId] = data.value);
-
-    console.log("custom fields:", form.data.typeCustomFields)
-
-    const typeCustomFieldValues: CustomFieldTypeValue[] = await prisma.customFieldTypeValue.findMany({
-        where: { assetTypeId: asset.typeId }
-    })
-    typeCustomFieldValues.forEach(
-        (data: CustomFieldTypeValue) => form.data.typeCustomFields[data.customFieldId] = data.value
-    );
 
     const assetTypes: AssetType[] = await prisma.assetType.findMany({
         where: { deleted: null },
