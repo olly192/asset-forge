@@ -3,11 +3,9 @@ import { typeMap } from "$lib/utils";
 import type { OptionalSchema } from "valibot";
 import * as v from "valibot";
 
-export function assetSchema(customFields: FullCustomField[], typeCustomFields: FullCustomField[] = []) {
+export function assetSchema(customFields: FullCustomField[]) {
     const mappedCustomFields: Record<string, OptionalSchema<any, any>> = {};
     customFields.forEach((field: FullCustomField) => mappedCustomFields[field.id] = typeMap[field.type]);
-    const mappedTypeCustomFields: Record<string, OptionalSchema<any, any>> = {};
-    typeCustomFields.forEach((field: FullCustomField) => mappedTypeCustomFields[field.id] = typeMap[field.type]);
 
     return v.object({
         assetId: v.pipe(
@@ -24,7 +22,6 @@ export function assetSchema(customFields: FullCustomField[], typeCustomFields: F
         location: v.optional(v.string()),
         tags: v.optional(v.array(v.string())),
         customFields: v.object(mappedCustomFields),
-        typeCustomFields: v.object(mappedTypeCustomFields),
     });
 }
 

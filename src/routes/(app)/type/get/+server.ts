@@ -1,6 +1,6 @@
 import { prisma } from '$lib/prisma';
 import type { FullCustomField } from "$lib/types";
-import type { AssetType, Category, CustomField, CustomFieldTypeValue } from "@prisma/client";
+import type { AssetType, Category, CustomFieldTypeValue } from "@prisma/client";
 import { auth } from '$lib/auth';
 import { error, json } from "@sveltejs/kit"
 

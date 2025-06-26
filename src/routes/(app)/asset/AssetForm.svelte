@@ -64,7 +64,9 @@
             <CardTitle>Custom Fields</CardTitle>
         </CardHeader>
         <CardContent>
-            <CustomFields {form} bind:category={assetType.categoryId} bind:tags={$formData.tags} />
+            {#if assetType?.categoryId}
+                <CustomFields {form} bind:category={assetType.categoryId} bind:tags={$formData.tags} />
+            {/if}
         </CardContent>
     </Card>
 
@@ -73,7 +75,9 @@
             <CardTitle>Images</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2">
-            <ImageGallery value={assetType.images} />
+            {#if assetType?.images}
+                <ImageGallery value={assetType.images} />
+            {/if}
         </CardContent>
     </Card>
 
@@ -114,7 +118,9 @@
             <CardTitle>Asset Type Custom Fields</CardTitle>
         </CardHeader>
         <CardContent>
-            <CustomFieldsDisplay bind:id={assetType.id} endpoint="/type/get" />
+            {#if assetType?.id}
+                <CustomFieldsDisplay bind:id={assetType.id} endpoint="/type/get" />
+            {/if}
         </CardContent>
     </Card>
 </main>

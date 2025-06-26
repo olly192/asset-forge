@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { page } from "$app/state";
-    import IdCell from "$components/table/cell/IdCell.svelte";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import type { FullCustomField } from "$lib/types";
@@ -10,13 +8,14 @@
     import { toast } from "svelte-sonner";
     import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
     import { valibotClient } from "sveltekit-superforms/adapters";
-    import AssetForm from "../../AssetForm.svelte";
-    import { assetSchema, type AssetSchema } from "../../schema";
+    import AssetForm from "../AssetForm.svelte";
+    import { assetSchema, type AssetSchema } from "../schema";
 
     let { data }: {
         data: {
             form: SuperValidated<Infer<AssetSchema>>,
-            customFields: FullCustomField[]
+            customFields: FullCustomField[],
+            typeCustomFields: FullCustomField[],
             assetTypes: AssetType[],
             categories: Category[]
         }
@@ -28,31 +27,25 @@
         onUpdated: ({ form }) => {
             if (form.valid) {
                 goto("/asset");
-                toast.success("Asset updated successfully.");
+                toast.success("Asset created successfully.");
             }
         }
     });
 
-    const { form: formData, allErrors } = form;
-    let assetType = $derived(data.assetTypes?.find(t => t.id === $formData.type));
+    const { allErrors } = form;
 
-    $effect(() => {
-        $breadcrumbs = [
-            { label: "Assets", href: "/asset" },
-            { label: `${assetType?.name} (${$formData.assetId})`, href: `/asset/${page.params.assetId}` },
-            { label: "Edit Asset" }
-        ];
-    });
-
+    $breadcrumbs = [
+        { label: "Assets", href: "/asset" },
+        { label: "Create Asset" }
+    ];
     $header = headerSnippet;
+
+    $inspect("errors", $allErrors)
 </script>
 
 {#snippet headerSnippet()}
     <div class="header">
-        <h1 class="flex flex-row items-center gap-4">
-            <span>{assetType?.name}</span>
-            <IdCell bind:value={$formData.assetId} class="bg-muted/50 p-1 pl-3 rounded-lg text-xl font-medium" />
-        </h1>
+        <h1>Create Asset</h1>
         <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
             <Save /> Save
         </Button>

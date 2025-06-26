@@ -1,25 +1,18 @@
-import type { FullCustomField, UnmappedAssetWithTags } from "$lib/types";
+import type { FullCustomField } from "$lib/types";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
 import { superValidate, type SuperValidated } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
-import { assetSchema } from "../../schema";
+import { assetSchema } from "../schema";
 import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
-import type { Asset, AssetType, Category, CustomFieldAssetValue } from "@prisma/client";
+import type { Asset, AssetType, Category } from "@prisma/client";
 
-export const load: PageServerLoad = async ({ request, params }) => {
+export const load: PageServerLoad = async ({ request, url }) => {
     const session = await auth.api.getSession(request);
     if (!session?.user) return;
 
-    const { assetId } = params;
-    if (!assetId) return fail(400, { message: "Asset ID is required" });
-
-    const asset: UnmappedAssetWithTags | null = await prisma.asset.findUnique({
-        where: { id: assetId, deleted: null },
-        include: { tags: true }
-    });
-    if (!asset) return fail(404, { message: "Asset not found" });
+    const assetId: string | null = url.searchParams.get("assetId");
 
     const customFields: FullCustomField[] = await prisma.customField.findMany({
         where: { deleted: null, archived: false, perInstance: true },
@@ -35,20 +28,12 @@ export const load: PageServerLoad = async ({ request, params }) => {
 
     const form: SuperValidated<any> = await superValidate(valibot(assetSchema(customFields)));
     form.data = {
-        assetId: asset.assetId,
-        notes: asset.notes || undefined,
-        location: asset.locationId || undefined,
-        type: asset.typeId,
-        tags: asset.tags.map(tag => tag.id) || [],
+        assetId,
+        tags: [],
         customFields: Object.fromEntries(
             customFields.map((field: FullCustomField) => [field.id, (field.options as { default: any })?.default])
         )
     };
-
-    const customFieldValues: CustomFieldAssetValue[] = await prisma.customFieldAssetValue.findMany({
-        where: { assetId }
-    })
-    customFieldValues.forEach((data: CustomFieldAssetValue) => form.data.customFields[data.customFieldId] = data.value);
 
     const assetTypes: AssetType[] = await prisma.assetType.findMany({
         where: { deleted: null },
@@ -75,35 +60,27 @@ export const actions: Actions = {
         );
         if (!form.valid) return fail(400, { form });
 
-        const { assetId } = event.params;
-        if (!assetId) return fail(400, { message: "Asset ID is required" });
+        const duplicateId: Asset | null = await prisma.asset.findFirst({
+            where: { assetId: form.data.assetId, deleted: null }
+        })
+        if (duplicateId) return fail(400, { form, message: "Asset ID already exists" });
 
-        const asset: Asset | null = await prisma.asset.findUnique({
-            where: { id: assetId, deleted: null }
-        });
-        if (!asset) return fail(404, { message: "Asset not found" });
-
-        await prisma.asset.update({
-            where: { id: assetId },
+        const asset: Asset = await prisma.asset.create({
             data: {
                 assetId: form.data.assetId,
                 notes: form.data.notes || null,
                 locationId: form.data.location || null,
                 typeId: form.data.type,
-                tags: { set: form.data.tags ? form.data.tags.map((tagId: string) => ({ id: tagId })) : [] }
+                tags: { connect: form.data.tags ? form.data.tags.map((tagId: string) => ({ id: tagId })) : [] }
             }
         })
 
         for (const [fieldId, value] of Object.entries(form.data.customFields)) {
             const emptyVal: any = customFields.find((field: FullCustomField) => field.id === fieldId)?.options?.default;
             if (value !== emptyVal) {
-                await prisma.customFieldAssetValue.upsert({
-                    where: { id: { customFieldId: fieldId, assetId } },
-                    create: { customFieldId: fieldId, assetId, value },
-                    update: { value }
+                await prisma.customFieldAssetValue.create({
+                    data: { customFieldId: fieldId, assetId: asset.id, value }
                 });
-            } else {
-                await prisma.customFieldAssetValue.deleteMany({ where: { customFieldId: fieldId, assetId } });
             }
         }
 

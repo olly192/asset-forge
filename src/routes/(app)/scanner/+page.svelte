@@ -54,7 +54,7 @@
         </AlertDialogHeader>
         <AlertDialogFooter class="flex flex-row justify-between">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onclick={() => goto(`/asset/new?code=${scannedCode}`)}>Create</AlertDialogAction>
+            <AlertDialogAction onclick={() => goto(`/asset/create?assetId=${scannedCode}`)}>Create</AlertDialogAction>
         </AlertDialogFooter>
     </AlertDialogContent>
 </AlertDialog>

@@ -74,7 +74,7 @@ model Verification {
 
 model Asset {
   id           String                  @id @default(uuid())
-  assetId      String
+  assetId      String                  @unique
   type         AssetType               @relation(fields: [typeId], references: [id])
   typeId       String
   notes        String?

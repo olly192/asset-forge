@@ -35,7 +35,7 @@
     <div class="flex flex-row justify-between items-center">
         <h1 class="text-4xl font-bold">Assets</h1>
         <div class="flex items-center space-x-2">
-            <Button onclick={() => goto("/asset/new")} class="size-9 md:w-min">
+            <Button onclick={() => goto("/asset/create")} class="size-9 md:w-min">
                 <Plus />
                 <span class="hidden md:block">Create Asset</span>
             </Button>
