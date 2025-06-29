@@ -13,6 +13,7 @@ export const load: PageServerLoad = async ({ request, url }) => {
     if (!session?.user) return;
 
     const assetId: string | null = url.searchParams.get("assetId");
+    const typeId: string | null = url.searchParams.get("type");
 
     const customFields: FullCustomField[] = await prisma.customField.findMany({
         where: { deleted: null, archived: false, perInstance: true },
@@ -29,6 +30,7 @@ export const load: PageServerLoad = async ({ request, url }) => {
     const form: SuperValidated<any> = await superValidate(valibot(assetSchema(customFields)));
     form.data = {
         assetId,
+        type: typeId || null,
         tags: [],
         customFields: Object.fromEntries(
             customFields.map((field: FullCustomField) => [field.id, (field.options as { default: any })?.default])

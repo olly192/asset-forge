@@ -20,16 +20,22 @@
         data: { form: SuperValidated<Infer<AssetTypeSchema>>, customFields: FullCustomField[] }
     } = $props();
 
+    let createInstance = false
     let form = superForm(data.form, {
         validators: valibotClient(assetTypeSchema(data.customFields)),
         dataType: "json",
         onUpdated: ({ form }) => {
             if (form.valid) {
-                goto("/type");
+                goto(createInstance ? `/asset/create?type=${form.assetTypeId}` : "/type");
                 toast.success("Asset type created successfully.");
             }
         }
     });
+
+    function saveAndCreateInstance() {
+        createInstance = true;
+        form.submit();
+    }
 
     const { allErrors } = form;
 </script>
@@ -37,9 +43,14 @@
 {#snippet headerSnippet()}
     <div class="header">
         <h1>Create Asset Type</h1>
-        <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
-            <Save /> Save
-        </Button>
+        <div>
+            <Button onclick={() => form.submit()} disabled={$allErrors.length > 0}>
+                <Save /> Save
+            </Button>
+            <Button variant="secondary" onclick={saveAndCreateInstance} disabled={$allErrors.length > 0}>
+                <Save /> Save + Create Instance
+            </Button>
+        </div>
     </div>
 {/snippet}
 

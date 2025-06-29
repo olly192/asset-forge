@@ -2,7 +2,7 @@ import type { FullCustomField } from "$lib/types";
 import type { AssetType } from "@prisma/client";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
 import { fail } from "@sveltejs/kit";
-import { superValidate } from "sveltekit-superforms";
+import { superValidate, type SuperValidated } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
 import { assetTypeSchema } from "../schema";
 import { auth } from "$lib/auth";
@@ -37,10 +37,10 @@ export const actions: Actions = {
             include: { tagLimit: true, categoryLimit: true }
         })
 
-        const form = await superValidate(event, valibot(assetTypeSchema(customFields)));
+        const form: SuperValidated<any> & { assetTypeId?: string } = await superValidate(
+            event, valibot(assetTypeSchema(customFields))
+        );
         if (!form.valid) return fail(400, { form });
-
-        console.log("Data:", form.data)
 
         const assetType: AssetType = await prisma.assetType.create({
             data: {
@@ -53,6 +53,7 @@ export const actions: Actions = {
                 images: { set: form.data.images ? form.data.images : [] }
             }
         })
+        form.assetTypeId = assetType.id;
 
         await prisma.customFieldTypeValue.createMany({
             data: Object.keys(form.data.customFields).map((id: string) => (form.data.customFields[id] ? {
