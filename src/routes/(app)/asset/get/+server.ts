@@ -1,12 +1,42 @@
 import { prisma } from '$lib/prisma';
-import type { Category, Location, Tag } from "@prisma/client";
+import type { Category, CustomFieldAssetValue, Location, Tag } from "@prisma/client";
 import { auth } from '$lib/auth';
-import type { AssetWithTags, UnmappedAssetWithTags } from '$lib/types';
+import type { AssetWithTags, AssetWithTagsAndType, FullCustomField, UnmappedAssetWithTags } from "$lib/types";
 import { error, json } from "@sveltejs/kit"
 
-export async function GET({ request }) {
+export async function GET({ request, url }) {
     const session = await auth.api.getSession(request);
     if (!session?.user) return error(403, "Unauthorized");
+
+    const assetId: string | null = url.searchParams.get("id");
+    if (assetId) {
+        const asset: AssetWithTagsAndType | null = await prisma.asset.findUnique({
+            where: { id: assetId, deleted: null },
+            include: { type: true, tags: true }
+        });
+        if (!asset) return error(404, "Asset not found");
+
+        let assetCustomFields: FullCustomField[] = await prisma.customField.findMany({
+            where: { deleted: null, archived: false, perInstance: true },
+            orderBy: { name: "asc" },
+            include: { tagLimit: true, categoryLimit: true }
+        })
+        const tags: string[] = asset.tags.map((tag: Tag) => tag.id);
+        assetCustomFields = assetCustomFields.filter((field: FullCustomField) => (
+            (
+                !field.categoryLimit
+                || field.categoryLimitId === (asset.type?.categoryId || null)
+            ) && (
+                !field.perInstance
+                || field.tagLimit.length === 0
+                || field.tagLimit.some((tag: Tag) => tags.includes(tag.id))
+            )
+        ));
+        const assetCustomFieldValues: CustomFieldAssetValue[] = await prisma.customFieldAssetValue.findMany({
+            where: { assetId }
+        })
+        return json({ asset, customFields: assetCustomFields, customFieldValues: assetCustomFieldValues });
+    }
 
     const unmappedAssets: UnmappedAssetWithTags[] = await prisma.asset.findMany({
         where: { deleted: null },

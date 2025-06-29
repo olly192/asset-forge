@@ -4,6 +4,10 @@ export type AssetWithTags = Asset & { tags: string[] };
 
 export type UnmappedAssetWithTags = Asset & { tags: { id: string }[] };
 
+export type AssetWithType = Asset & { type: AssetType | null };
+
+export type AssetWithTagsAndType = Prisma.AssetGetPayload<{ include: { type: true, tags: true } }>;
+
 export type FullAsset = Asset & {
     location: Location | null;
     tags: Tag[];

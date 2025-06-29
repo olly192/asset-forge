@@ -11,7 +11,7 @@ export async function GET({ request, url }) {
     const typeId: string | null = url.searchParams.get("id");
     if (typeId) {
         const assetType: AssetType | null = await prisma.assetType.findUnique({
-            where: { id: typeId, deleted: null },
+            where: { id: typeId, deleted: null }
         });
         if (!assetType) return error(404, "Asset type not found");
 
@@ -26,7 +26,7 @@ export async function GET({ request, url }) {
         const typeCustomFieldValues: CustomFieldTypeValue[] = await prisma.customFieldTypeValue.findMany({
             where: { assetTypeId: typeId }
         })
-        return json({ assetType, typeCustomFields, typeCustomFieldValues });
+        return json({ assetType, customFields: typeCustomFields, customFieldValues: typeCustomFieldValues });
     }
 
     const assetTypes = await prisma.assetType.findMany({

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CustomFields from "$components/CustomFields.svelte";
+    import CustomFieldsDisplay from "$components/CustomFieldsDisplay.svelte";
     import ImageGallery from "$components/ImageGallery.svelte";
     import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/cell/IdCell.svelte";
@@ -100,7 +100,7 @@
             <CardTitle>Custom Fields</CardTitle>
         </CardHeader>
         <CardContent>
-            <!-- <CustomFields {form} readonly /> -->
+            <CustomFieldsDisplay bind:id={asset.id} endpoint="/asset/get" />
         </CardContent>
     </Card>
 
@@ -142,6 +142,17 @@
                     </Button>
                 {/if}
             </div>
+        </CardContent>
+    </Card>
+
+    <Card>
+        <CardHeader>
+            <CardTitle>Asset Type Custom Fields</CardTitle>
+        </CardHeader>
+        <CardContent>
+            {#if asset.type?.id}
+                <CustomFieldsDisplay bind:id={asset.type.id} endpoint="/type/get" />
+            {/if}
         </CardContent>
     </Card>
 </main>
