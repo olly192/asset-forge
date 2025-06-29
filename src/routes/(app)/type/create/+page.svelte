@@ -48,7 +48,7 @@
                 <Save /> Save
             </Button>
             <Button variant="secondary" onclick={saveAndCreateInstance} disabled={$allErrors.length > 0}>
-                <Save /> Save + Create Instance
+                <Save /> Save & Create Instance
             </Button>
         </div>
     </div>

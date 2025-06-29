@@ -47,8 +47,6 @@
     }
 
     const deleteOption = (id) => options = options.filter(option => option.value !== id);
-
-    $inspect("value", value)
 </script>
 
 {#snippet iconTrigger(value, SelectedIcon, color, props)}

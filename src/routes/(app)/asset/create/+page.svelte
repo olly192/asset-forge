@@ -39,8 +39,6 @@
         { label: "Create Asset" }
     ];
     $header = headerSnippet;
-
-    $inspect("errors", $allErrors)
 </script>
 
 {#snippet headerSnippet()}

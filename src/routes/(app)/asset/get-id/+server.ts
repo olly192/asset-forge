@@ -7,9 +7,6 @@ export async function GET({ request, url }) {
     const session = await auth.api.getSession(request);
     if (!session?.user) return error(403, "Unauthorized");
 
-    console.log("GET /asset/get-id");
-    console.log("ID from URL:", url.searchParams.get("assetId"));
-
     const assetId: string | null = url.searchParams.get("assetId");
     if (!assetId) return error(400, "Asset ID is required");
 
