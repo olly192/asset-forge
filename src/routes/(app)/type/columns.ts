@@ -5,6 +5,7 @@ import IconCell from "$components/table/cell/IconCell.svelte";
 import { archivedFilter, type Filter, type FilterOption } from "$components/table/data";
 import type { AssetType, Category } from "@prisma/client";
 import { assetTypeToBrandFilter, categoriesToFilter } from "$lib/utils";
+import { Shapes, Triangle } from "lucide-svelte";
 import type { Component } from "svelte";
 import { get, type Writable, writable } from "svelte/store";
 
@@ -12,6 +13,11 @@ export type Data = {
     assetTypes: AssetType[];
     categories: Category[];
 };
+
+const individualFilter: Writable<FilterOption[]> = writable([
+    { value: "true", label: "True", icon: Triangle, color: "red" },
+    { value: "false", label: "False", icon: Shapes, color: "green" }
+])
 
 export function generateTable(data: Writable<Data>, actionsComponent: Component<any>, refreshData: Function) {
     const { assetTypes, categories } = get(data);
@@ -25,6 +31,7 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
     const filters: Filter[] = [
         { id: "category", label: "Category", options: categoryOptions },
         { id: "archived", label: "Archived", options: archivedFilter, default: ["false"] },
+        { id: "individual", label: "Individual Type", options: individualFilter, default: ["false"] },
         { id: "brand", label: "Brand", options: assetTypeFilter }
     ]
 
@@ -92,6 +99,17 @@ export function generateTable(data: Writable<Data>, actionsComponent: Component<
         //     },
         //     filterFn: "arrIncludesSome"
         // },
+        {
+            id: "individual",
+            accessorKey: "individualType",
+            header: "Individual Type",
+            cell: ({ row }) => {
+                return renderComponent(CheckboxCell, { checked: row.original.individualType, disabled: true });
+            },
+            filterFn: (row, _, filterValue) => {
+                return filterValue.length === 0 || filterValue.includes(row.original.individualType.toString())
+            }
+        },
         {
             id: "archived",
             accessorKey: "archived",

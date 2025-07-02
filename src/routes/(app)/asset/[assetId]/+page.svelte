@@ -102,7 +102,7 @@
 
             <Label class="flex items-start gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50 has-[[aria-checked=true]]:border-red-900 has-[[aria-checked=true]]:bg-red-950">
                 <Checkbox
-                    checked={asset.type.individualType}
+                    checked={asset.type.individualType} readonly disabled
                     class="data-[state=checked]:border-red-700 data-[state=checked]:bg-red-700"
                 />
                 <div class="flex flex-col gap-1.5">
@@ -135,7 +135,7 @@
 
     <Card>
         <CardHeader>
-            <CardTitle>Asset Type</CardTitle>
+            <CardTitle>Asset Type Details</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2">
             <div class="space-y-2">
