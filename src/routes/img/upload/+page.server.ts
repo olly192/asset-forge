@@ -1,5 +1,5 @@
-import { auth } from "$lib/auth";
-import { fail, type Actions } from "@sveltejs/kit";
+import type { Session } from "@auth/sveltekit";
+import { fail, type Actions, type RequestEvent } from "@sveltejs/kit";
 import { randomUUID } from "node:crypto";
 import { superValidate } from "sveltekit-superforms";
 import * as v from "valibot";
@@ -15,8 +15,8 @@ const uploadSchema = v.object({
 });
 
 export const actions: Actions = {
-    default: async (event) => {
-        const session = await auth.api.getSession(event.request);
+    default: async (event: RequestEvent) => {
+        const session: Session | null = await event.locals.auth();
         if (!session?.user) return fail(401, { message: "Unauthorized" });
 
         const form = await superValidate(event, valibot(uploadSchema));

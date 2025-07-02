@@ -1,14 +1,14 @@
-import { auth } from "$lib/auth";
-import { error, type RequestHandler } from "@sveltejs/kit";
+import type { Session } from "@auth/sveltekit";
+import { error, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
 import { bucket, s3 } from "$lib/storage";
 import type { BucketItemStat } from "minio";
 import type { Readable } from "node:stream";
 
-export const GET: RequestHandler = async ({ params, request }) => {
-    const session = await auth.api.getSession(request);
+export const GET: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(401, { message: "Unauthorized" });
 
-    const id: string | undefined = params.id;
+    const id: string | undefined = event.params.id;
     if (!id) return error(400, { message: "Image ID is required." });
 
     try {

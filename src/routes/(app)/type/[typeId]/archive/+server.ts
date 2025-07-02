@@ -1,13 +1,13 @@
+import type { Session } from "@auth/sveltekit";
 import { error, json, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
-import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { AssetType } from "@prisma/client"
 
-export const POST: RequestHandler = async ({ request, params }: RequestEvent) => {
-    const session = await auth.api.getSession(request);
+export const POST: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(403, "Unauthorized");
 
-    const { typeId } = params;
+    const { typeId } = event.params;
     if (!typeId) return error(400, "Asset type ID is required");
 
     const assetType: AssetType | null = await prisma.assetType.findUnique({

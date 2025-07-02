@@ -1,19 +1,19 @@
 import type { FullCustomField } from "$lib/types";
+import type { Session } from "@auth/sveltekit";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
-import { fail } from "@sveltejs/kit";
+import { fail, type ServerLoadEvent } from "@sveltejs/kit";
 import { superValidate, type SuperValidated } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
 import { assetSchema } from "../schema";
-import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { Asset, AssetType, Category } from "@prisma/client";
 
-export const load: PageServerLoad = async ({ request, url }) => {
-    const session = await auth.api.getSession(request);
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return;
 
-    const assetId: string | null = url.searchParams.get("assetId");
-    const typeId: string | null = url.searchParams.get("type");
+    const assetId: string | null = event.url.searchParams.get("assetId");
+    const typeId: string | null = event.url.searchParams.get("type");
 
     const customFields: FullCustomField[] = await prisma.customField.findMany({
         where: { deleted: null, archived: false, perInstance: true },
@@ -53,7 +53,7 @@ export const load: PageServerLoad = async ({ request, url }) => {
 
 export const actions: Actions = {
     default: async (event: RequestEvent) => {
-        const session = await auth.api.getSession(event.request);
+        const session: Session | null = await event.locals.auth();
         if (!session?.user) return;
 
         const customFields: FullCustomField[] = await prisma.customField.findMany({

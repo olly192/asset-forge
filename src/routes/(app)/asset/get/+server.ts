@@ -1,14 +1,14 @@
 import { prisma } from '$lib/prisma';
+import type { Session } from "@auth/sveltekit";
 import type { Category, CustomFieldAssetValue, Location, Tag } from "@prisma/client";
-import { auth } from '$lib/auth';
 import type { AssetWithTags, AssetWithTagsAndType, FullCustomField, UnmappedAssetWithTags } from "$lib/types";
-import { error, json } from "@sveltejs/kit"
+import { error, json, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
 
-export async function GET({ request, url }) {
-    const session = await auth.api.getSession(request);
+export const GET: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(403, "Unauthorized");
 
-    const assetId: string | null = url.searchParams.get("id");
+    const assetId: string | null = event.url.searchParams.get("id");
     if (assetId) {
         const asset: AssetWithTagsAndType | null = await prisma.asset.findUnique({
             where: { id: assetId, deleted: null },

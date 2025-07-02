@@ -1,4 +1,3 @@
-import { type AccessControl, createAccessControl } from "better-auth/plugins/access";
 import { Server, Shield, User } from "lucide-svelte";
 
 const permissions = {
@@ -9,28 +8,25 @@ const permissions = {
     booking: ["create", "view", "edit", "delete", "view-own", "edit-own", "delete-own", "set-status"],
     user: ["create", "list", "set-role", "ban", "impersonate", "delete", "set-password"],
     session: ["list", "revoke", "delete"]
-};
+}
 
-export const ac: AccessControl = createAccessControl(permissions);
-
-export const user = ac.newRole({
+export const user = {
     asset: ["view"],
     category: ["view"],
     tag: ["view"],
     location: ["view"],
     booking: ["create", "view-own", "edit-own", "delete-own"],
-})
+}
 
-export const manager = ac.newRole({
+export const manager = {
     asset: ["create", "view", "edit", "delete"],
     category: ["create", "view", "edit", "delete"],
     tag: ["create", "view", "edit", "delete"],
     location: ["create", "view", "edit", "delete"],
     booking: ["create", "view", "edit", "delete", "view-own", "edit-own", "delete-own", "set-status"]
-})
+}
 
-
-export const admin = ac.newRole({
+export const admin = {
     asset: ["create", "view", "edit", "delete"],
     category: ["create", "view", "edit", "delete"],
     tag: ["create", "view", "edit", "delete"],
@@ -38,7 +34,7 @@ export const admin = ac.newRole({
     booking: ["create", "view", "edit", "delete", "view-own", "edit-own", "delete-own", "set-status"],
     user: ["create", "list", "set-role", "ban", "impersonate", "delete", "set-password"],
     session: ["list", "revoke", "delete"]
-})
+}
 
 export const roles = { user, manager, admin }
 

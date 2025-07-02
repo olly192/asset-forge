@@ -1,13 +1,13 @@
+import type { Session } from "@auth/sveltekit";
 import { error, json, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
-import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { CustomField } from "@prisma/client";
 
-export const POST: RequestHandler = async ({ request, params }: RequestEvent) => {
-    const session = await auth.api.getSession(request);
+export const POST: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(403, "Unauthorized");
 
-    const { fieldId } = params;
+    const { fieldId } = event.params;
     if (!fieldId) return error(400, "Custom field ID is required");
 
     const customField: CustomField | null = await prisma.customField.findUnique({

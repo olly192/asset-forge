@@ -1,7 +1,8 @@
-import type { LayoutServerLoad } from './$types';
-import { auth, providers } from "$lib/auth";
+import type { Session } from "@auth/sveltekit";
+import type { ServerLoadEvent } from "@sveltejs/kit";
+import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({ request }) => {
-    const session = await auth.api.getSession(request);
-    return { user: session?.user, providers };
-};
+export const load: LayoutServerLoad = async (event: ServerLoadEvent) => {
+    const session: Session | null = await event.locals.auth();
+    return { session };
+}

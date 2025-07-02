@@ -1,18 +1,18 @@
 import type { AssetWithTagsAndType, FullCustomField } from "$lib/types";
+import type { Session } from "@auth/sveltekit";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
-import { fail } from "@sveltejs/kit";
+import { fail, type ServerLoadEvent } from "@sveltejs/kit";
 import { superValidate, type SuperValidated } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
 import { assetSchema } from "../../schema";
-import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 import type { Asset, AssetType, Category, CustomFieldAssetValue, CustomFieldTypeValue } from "@prisma/client";
 
-export const load: PageServerLoad = async ({ request, params }) => {
-    const session = await auth.api.getSession(request);
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return;
 
-    const { assetId } = params;
+    const { assetId } = event.params;
     if (!assetId) return fail(400, { message: "Asset ID is required" });
 
     const asset: AssetWithTagsAndType | null = await prisma.asset.findUnique({
@@ -81,7 +81,7 @@ export const load: PageServerLoad = async ({ request, params }) => {
 
 export const actions: Actions = {
     default: async (event: RequestEvent) => {
-        const session = await auth.api.getSession(event.request);
+        const session: Session | null = await event.locals.auth();
         if (!session?.user) return;
 
         const customFields: FullCustomField[] = await prisma.customField.findMany({

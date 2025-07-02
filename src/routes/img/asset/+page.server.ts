@@ -16,26 +16,3 @@ export const load: PageServerLoad = async ({ url }) => {
 
     return {}
 };
-
-//
-// export const actions: Actions = {
-//     default: async (event) => {
-//         const form = await superValidate(event, valibot(formSchema));
-//         if (!form.valid) {
-//             return fail(400, { form });
-//         }
-//         console.log(form)
-//
-//         const logo: File = form.data.logo;
-//
-//         const logoBuffer: Buffer = Buffer.from(await logo.arrayBuffer());
-//         console.log("logo", logo)
-//         const organisationId = "123-123-123"
-//         const logoPath = `asset/${organisationId}`;
-//         await s3.putObject(bucket, logoPath, logoBuffer, logo.size, {
-//             'Content-Type': logo.type
-//         })
-//
-//         return { form };
-//     }
-// };

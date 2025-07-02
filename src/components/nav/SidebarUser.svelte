@@ -9,7 +9,6 @@
     import { useSidebar } from "$lib/components/ui/sidebar";
     import { ChevronsUpDown, LogOut, Settings, User } from "lucide-svelte";
     import { page } from "$app/state";
-    import { signOut } from "$lib/auth-client";
     import { goto } from "$app/navigation";
 
     const user = page.data?.user
@@ -64,7 +63,7 @@
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
-                    <DropdownMenuItem onclick={async () => { await signOut() }}>
+                    <DropdownMenuItem onclick={() => goto("/auth/logout")}>
                         <LogOut/> Log out
                     </DropdownMenuItem>
                 </DropdownMenuContent>

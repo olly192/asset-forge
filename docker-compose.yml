@@ -1,7 +1,7 @@
 services:
   asset-forge:
     container_name: asset-forge
-    image: olly192:asset-forge
+    image: olly192/asset-forge:latest
     ports:
       - "3000:3000"
     env_file:

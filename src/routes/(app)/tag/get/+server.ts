@@ -1,10 +1,10 @@
 import { prisma } from '$lib/prisma';
+import type { Session } from "@auth/sveltekit";
 import type { Tag } from "@prisma/client";
-import { auth } from '$lib/auth';
-import { error, json } from "@sveltejs/kit"
+import { error, json, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
 
-export async function GET({ request }) {
-    const session = await auth.api.getSession(request);
+export const GET: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(403, "Unauthorized");
 
     const tags: Tag[] = await prisma.tag.findMany({

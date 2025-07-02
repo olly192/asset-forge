@@ -1,15 +1,15 @@
+import type { Session } from "@auth/sveltekit";
 import type { PageServerLoad } from "./$types.js";
-import { fail } from "@sveltejs/kit";
-import { auth } from "$lib/auth";
+import { fail, type ServerLoadEvent } from "@sveltejs/kit";
 import { prisma } from "$lib/prisma";
 import type { FullAsset } from "$lib/types";
 import type { Category, Location, Tag } from "@prisma/client";
 
-export const load: PageServerLoad = async ({ request, params }) => {
-    const session = await auth.api.getSession(request);
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return;
 
-    const { assetId } = params;
+    const { assetId } = event.params;
     if (!assetId) return fail(400, { message: "Asset ID is required" });
 
     const asset: FullAsset | null = await prisma.asset.findUnique({

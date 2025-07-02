@@ -26,6 +26,15 @@ docker build -t olly192:asset-forge .
 docker compose up -d
 ```
 
+## Setting Up the Production Database
+```bash
+bunx prisma migrate diff \
+--from-empty
+--to-schema-datamodel prisma/schema.prisma \
+--script > prisma/migrations/0_init/migration.sql
+bunx primsa migrate deploy
+```
+
 ## TODO
 - Bookings
 - Recurring bookings

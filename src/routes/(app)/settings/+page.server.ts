@@ -1,13 +1,13 @@
+import type { Session } from "@auth/sveltekit";
 import type { PageServerLoad, Actions, RequestEvent } from "./$types.js";
-import { fail } from "@sveltejs/kit";
+import { fail, type ServerLoadEvent } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { valibot } from "sveltekit-superforms/adapters";
 import { settingsSchema } from "./schema";
-import { auth } from "$lib/auth";
 import { prisma } from "$lib/prisma";
 
-export const load: PageServerLoad = async ({ request }) => {
-    const session = await auth.api.getSession(request);
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return;
 
     const form = await superValidate(valibot(settingsSchema));
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ request }) => {
 
 export const actions: Actions = {
     default: async (event: RequestEvent) => {
-        const session = await auth.api.getSession(event.request);
+        const session: Session | null = await event.locals.auth();
         if (!session?.user) return;
 
         const form = await superValidate(event, valibot(settingsSchema));

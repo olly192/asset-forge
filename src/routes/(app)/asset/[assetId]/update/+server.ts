@@ -1,13 +1,13 @@
-import { error, json, type RequestHandler } from "@sveltejs/kit";
-import { auth } from "$lib/auth";
-import type { Asset } from "@prisma/client";
+import type { Session } from "@auth/sveltekit";
+import { error, json, type RequestEvent, type RequestHandler } from "@sveltejs/kit";
 import { prisma } from "$lib/prisma";
+import type { Asset } from "@prisma/client";
 
-export const POST: RequestHandler = async ({ request, params }) => {
-    const session = await auth.api.getSession(request);
+export const POST: RequestHandler = async (event: RequestEvent) => {
+    const session: Session | null = await event.locals.auth();
     if (!session?.user) return error(401, { message: "Unauthorized" });
 
-    const { assetId } = params;
+    const { assetId } = event.params;
     if (!assetId) return error(400, { message: "Asset ID is required" });
 
     const asset: Asset | null = await prisma.asset.findUnique({
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     });
     if (!asset) return error(404, { message: "Asset not found" });
 
-    const data: { locationId?: string, tagIds?: string[] } = await request.json();
+    const data: { locationId?: string, tagIds?: string[] } = await event.request.json();
     if (!data) return error(400, { message: "No data provided" });
 
     if (data.locationId !== undefined) {
