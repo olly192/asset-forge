@@ -112,7 +112,7 @@
                             <TooltipProvider delayDuration={0}>
                                 <Tooltip>
                                     <TooltipTrigger>
-                                        <Button variant="outline" size="icon" onclick={() => viewImage(image)}>
+                                        <Button variant="outline" size="icon" onclick={() => removeImage(image)}>
                                             <Trash class="size-4" />
                                         </Button>
                                     </TooltipTrigger>

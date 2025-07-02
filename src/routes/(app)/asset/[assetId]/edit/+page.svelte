@@ -16,14 +16,15 @@
     let { data }: {
         data: {
             form: SuperValidated<Infer<AssetSchema>>,
-            customFields: FullCustomField[]
+            customFields: FullCustomField[],
+            typeCustomFields: FullCustomField[],
             assetTypes: AssetType[],
             categories: Category[]
         }
     } = $props();
 
     let form = superForm(data.form, {
-        validators: valibotClient(assetSchema(data.customFields)),
+        validators: valibotClient(assetSchema(data.customFields, data.typeCustomFields)),
         dataType: "json",
         onUpdated: ({ form }) => {
             if (form.valid) {
@@ -34,7 +35,7 @@
     });
 
     const { form: formData, allErrors } = form;
-    let assetType = $derived(data.assetTypes?.find(t => t.id === $formData.type));
+    let assetType = $derived(data.assetTypes?.find(t => t.id === $formData.typeId));
 
     $effect(() => {
         $breadcrumbs = [

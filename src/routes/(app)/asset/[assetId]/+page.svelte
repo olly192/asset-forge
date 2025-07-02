@@ -3,6 +3,7 @@
     import ImageGallery from "$components/ImageGallery.svelte";
     import NestedItems from "$components/NestedItems.svelte";
     import IdCell from "$components/table/cell/IdCell.svelte";
+    import { Checkbox } from "$lib/components/ui/checkbox";
     import { breadcrumbs, header } from "$lib/stores";
     import { Button } from "$lib/components/ui/button";
     import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
@@ -32,12 +33,18 @@
             <IdCell value={asset.assetId} class="bg-muted/50 p-1 pl-3 rounded-lg text-xl font-medium" />
         </h1>
         <div>
-            <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
-                <Pencil /> Edit Instance
-            </Button>
-            <Button onclick={() => goto(`/type/${asset.typeId}/edit`)} variant="secondary">
-                <PencilRuler /> Edit Type
-            </Button>
+            {#if asset.type.individualType}
+                <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
+                    <Pencil /> Edit
+                </Button>
+            {:else}
+                <Button onclick={() => goto(`/asset/${asset.id}/edit`)}>
+                    <Pencil /> Edit Instance
+                </Button>
+                <Button onclick={() => goto(`/type/${asset.typeId}/edit`)} variant="secondary">
+                    <PencilRuler /> Edit Type
+                </Button>
+            {/if}
         </div>
     </div>
 {/snippet}
@@ -92,6 +99,19 @@
                     {/if}
                 </div>
             </div>
+
+            <Label class="flex items-start gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50 has-[[aria-checked=true]]:border-red-900 has-[[aria-checked=true]]:bg-red-950">
+                <Checkbox
+                    checked={asset.type.individualType}
+                    class="data-[state=checked]:border-red-700 data-[state=checked]:bg-red-700"
+                />
+                <div class="flex flex-col gap-1.5">
+                    <p class="text-sm font-medium leading-none">Individual Type</p>
+                    <p class="text-muted-foreground font-normal text-sm">
+                        This asset is the only instance of its type.
+                    </p>
+                </div>
+            </Label>
         </CardContent>
     </Card>
 
@@ -156,4 +176,3 @@
         </CardContent>
     </Card>
 </main>
-

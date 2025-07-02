@@ -9,8 +9,8 @@
     import type { AssetType, Category } from "@prisma/client";
     import type { SuperForm } from "sveltekit-superforms";
 
-    let { form, name, value = $bindable(), label, exclude }: {
-        form: SuperForm<any>, name: string, value: string, label: string, exclude?: string
+    let { form, name, value = $bindable(), label, exclude, allowIndividual = false }: {
+        form: SuperForm<any>, name: string, value: string, label: string, exclude?: string, allowIndividual?: boolean
     } = $props();
 
     let assetTypes: AssetType[] = $state([]);
@@ -21,7 +21,7 @@
         refreshing = true;
         const resp = await fetch("/type/get");
         const newData: { assetTypes: AssetType[], categories: Category[] } = await resp.json();
-        assetTypes = newData.assetTypes.filter(t => t.id !== exclude);
+        assetTypes = newData.assetTypes.filter(t => t.id !== exclude).filter(t => allowIndividual || !t.individualType);
         categories = newData.categories;
         refreshing = false;
     }

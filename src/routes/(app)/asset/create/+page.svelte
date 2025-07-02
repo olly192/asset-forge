@@ -22,7 +22,7 @@
     } = $props();
 
     let form = superForm(data.form, {
-        validators: valibotClient(assetSchema(data.customFields)),
+        validators: valibotClient(assetSchema(data.customFields, data.typeCustomFields)),
         dataType: "json",
         onUpdated: ({ form }) => {
             if (form.valid) {

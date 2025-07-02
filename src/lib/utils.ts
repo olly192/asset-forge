@@ -68,7 +68,7 @@ export function assetTypeToFilter(types: AssetType[]): FilterOption[] {
 	return types.map((type: AssetType) => ({
 		value: type.id,
 		label: type.name,
-		url: `/type/${type.id}/edit`
+		url: type.individualType ? undefined : `/type/${type.id}/edit`
 	}))
 }
 

@@ -91,21 +91,22 @@ model Asset {
 }
 
 model AssetType {
-  id           String                 @id @default(uuid())
-  name         String
-  displayName  String?
-  description  String?
-  brand        String?
-  value        Float?
-  images       String[]
-  assets       Asset[]
-  category     Category?              @relation(fields: [categoryId], references: [id])
-  categoryId   String?
-  customFields CustomFieldTypeValue[]
-  archived     Boolean                @default(false)
-  deleted      DateTime?
-  createdAt    DateTime               @default(now())
-  updatedAt    DateTime               @updatedAt
+  id             String                 @id @default(uuid())
+  name           String
+  displayName    String?
+  description    String?
+  brand          String?
+  value          Float?
+  images         String[]
+  assets         Asset[]
+  category       Category?              @relation(fields: [categoryId], references: [id])
+  categoryId     String?
+  customFields   CustomFieldTypeValue[]
+  individualType Boolean                @default(false)
+  archived       Boolean                @default(false)
+  deleted        DateTime?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
 
   @@map("asset_type")
 }
