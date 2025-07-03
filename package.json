@@ -1,13 +1,13 @@
 {
     "name": "asset-forge",
-    "private": true,
     "version": "0.0.1",
     "type": "module",
     "scripts": {
         "dev": "vite dev --host",
         "build": "vite build",
         "preview": "vite preview",
-        "prepare": "svelte-kit sync || echo ''"
+        "prepare": "svelte-kit sync || echo ''",
+        "studio": "prisma studio"
     },
     "devDependencies": {
         "@internationalized/date": "^3.7.0",
@@ -23,7 +23,6 @@
         "paneforge": "^1.0.0-next.4",
         "prisma": "^6.11.0",
         "svelte": "^5.0.0",
-        "svelte-adapter-bun": "^0.5.2",
         "svelte-check": "^4.0.0",
         "svelte-sonner": "^0.3.28",
         "sveltekit-superforms": "^2.23.1",

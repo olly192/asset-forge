@@ -8,7 +8,7 @@ import Google from "@auth/sveltekit/providers/google"
 import Keycloak from "@auth/sveltekit/providers/keycloak";
 import type { Provider } from "@auth/sveltekit/providers";
 
-const providers: Provider[] = [Keycloak];
+const providers: Provider[] = [];
 
 if (process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET) {
     providers.push(Apple);
@@ -52,5 +52,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     pages: {
         signIn: "/auth/login",
         signOut: "/auth/logout"
-    }
+    },
+    trustHost: process.env.AUTH_TRUST_HOST === "true"
 })

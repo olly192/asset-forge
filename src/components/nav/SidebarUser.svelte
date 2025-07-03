@@ -7,6 +7,7 @@
     import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "$lib/components/ui/sidebar";
     import { Skeleton } from "$lib/components/ui/skeleton"
     import { useSidebar } from "$lib/components/ui/sidebar";
+    import { signOut } from "@auth/sveltekit/client";
     import { ChevronsUpDown, LogOut, Settings, User } from "lucide-svelte";
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
@@ -63,7 +64,7 @@
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
-                    <DropdownMenuItem onclick={() => goto("/auth/logout")}>
+                    <DropdownMenuItem onclick={() => signOut()}>
                         <LogOut/> Log out
                     </DropdownMenuItem>
                 </DropdownMenuContent>
