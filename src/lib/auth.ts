@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/private";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Apple from "@auth/sveltekit/providers/apple"
 import Auth0 from "@auth/sveltekit/providers/auth0"
@@ -10,31 +11,31 @@ import type { Provider } from "@auth/sveltekit/providers";
 
 const providers: Provider[] = [];
 
-if (process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET) {
+if (env.AUTH_APPLE_ID && env.AUTH_APPLE_SECRET) {
     providers.push(Apple);
 }
 
-if (process.env.AUTH_AUTH0_ID && process.env.AUTH_AUTH0_SECRET) {
+if (env.AUTH_AUTH0_ID && env.AUTH_AUTH0_SECRET) {
     providers.push(Auth0);
 }
 
-if (process.env.AUTH_AUTHENTIK_ID && process.env.AUTH_AUTHENTIK_SECRET && process.env.AUTH_AUTHENTIK_ISSUER) {
+if (env.AUTH_AUTHENTIK_ID && env.AUTH_AUTHENTIK_SECRET && env.AUTH_AUTHENTIK_ISSUER) {
     providers.push(Authentik);
 }
 
-if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+if (env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET) {
     providers.push(Discord);
 }
 
-if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
     providers.push(GitHub);
 }
 
-if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
     providers.push(Google);
 }
 
-if (process.env.AUTH_KEYCLOAK_ID && process.env.AUTH_KEYCLOAK_SECRET && process.env.AUTH_KEYCLOAK_ISSUER) {
+if (env.AUTH_KEYCLOAK_ID && env.AUTH_KEYCLOAK_SECRET && env.AUTH_KEYCLOAK_ISSUER) {
     providers.push(Keycloak);
 }
 
@@ -53,5 +54,5 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
         signIn: "/auth/login",
         signOut: "/auth/logout"
     },
-    trustHost: process.env.AUTH_TRUST_HOST === "true"
+    trustHost: env.AUTH_TRUST_HOST === "true"
 })
