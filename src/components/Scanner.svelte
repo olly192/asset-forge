@@ -3,7 +3,7 @@
     import { BarcodeDetector } from "barcode-detector";
     import { CameraOff, Flashlight, FlashlightOff, ZoomIn, ZoomOut } from "lucide-svelte";
     import { onMount } from "svelte";
-    import { PUBLIC_QR_PREFIX } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
 
     let { onScan }: { onScan: (code: string) => void } = $props()
 
@@ -71,10 +71,10 @@
         if (!stream || !video || video.readyState !== video.HAVE_ENOUGH_DATA) return;
         const detectedCodes = await barcodeDetector.detect(video);
         detectedCodes.forEach((code: DetectedBarcode) => {
-            if (!code.rawValue.startsWith(PUBLIC_QR_PREFIX)) return
+            if (!code.rawValue.startsWith(env.PUBLIC_QR_PREFIX)) return
             if (codes.includes(code.rawValue)) return;
             codes.push(code.rawValue);
-            onScan(code.rawValue.replace(PUBLIC_QR_PREFIX, ""));
+            onScan(code.rawValue.replace(env.PUBLIC_QR_PREFIX, ""));
         });
     }
 
