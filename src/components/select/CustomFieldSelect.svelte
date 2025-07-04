@@ -12,7 +12,7 @@
     import { Popover, PopoverContent, PopoverTrigger } from "$lib/components/ui/popover/index.js";
     import { Button } from "$lib/components/ui/button/index.js";
 
-    let { form, name, value = $bindable(), label, options, allowNone = false, readonly = false }: {
+    let { form, name, value = $bindable(), label, options = [], allowNone = false, readonly = false }: {
         form?: SuperForm<any>,
         name: string,
         value?: string,
